@@ -1,5 +1,26 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- Comprehensive unit tests for Models and ViewModels
+  - Tests for MovieFile initialization and equality
+  - Tests for DensityConfig values and behavior
+  - Tests for VideoThumbnail initialization and time formatting
+  - Tests for VideoProcessor functionality
+  - Tests for ViewState enum cases
+- Comprehensive UI tests
+  - Tests for initial application state
+  - Tests for density picker functionality
+  - Tests for navigation elements
+  - Tests for thumbnail grid layout
+  - Tests for accessibility labels
+  - Tests for user interaction responsiveness
+- Launch tests
+  - Tests for initial UI elements presence
+  - Performance metrics for app launch
+  - Screenshot capture of launch state
+
 ## [0.1.0] - 2024-01-11
 
 ### Added
@@ -18,6 +39,28 @@
 - Implemented error handling
 - Added loading indicators
 - Created unified MovieViewCore.swift for better organization
+- Implemented hover preview with 2-second looping video clips
+- Added thumbnail density control (XXS to XXL) with dynamic thumbnail count calculation
+- Added automatic reprocessing when density is changed
+- Added progressive thumbnail loading with fade-in animations
+- Added file picker to open movie files directly from the app
+- Added ability to cancel video processing with escape key or cancel button
+- Added thumbnail count preview when changing density
+- Added folder browsing with movie previews and double-click to process
+- Added back navigation between folder and processing views
+- Added split view for folder browsing with movie list and mosaic preview
+- Modified thumbnail generation to respect original video aspect ratios
+- Updated ThumbnailView to handle variable height thumbnails while maintaining consistent width
+- Updated folder processor to respect video aspect ratios when generating thumbnails
+- Added thumbnail size slider to control thumbnail dimensions (160px to 480px)
+- Updated thumbnail generation to support higher resolution previews
+- Modified grid layout to dynamically adjust to thumbnail size changes
+- Added "Today's Videos" feature to quickly access videos created today
+- Added Spotlight integration for finding today's videos
+- Added loading indicator for today's videos search
+- Added date range search for finding videos between specific dates
+- Added date picker sheet with start and end date selection
+- Added loading indicators for date range search
 
 ### Changed
 - Removed SwiftData references from the project
@@ -25,6 +68,15 @@
 - Modified window configuration for better UX
 - Consolidated all components into a single core file
 - Improved error handling with proper MainActor usage
+- Updated thumbnail generation to use density-based calculations
+- Added currentVideoURL tracking to VideoProcessor for density changes
+- Enhanced thumbnail loading with sequential appearance and animations
+- Made video processing more accessible with public processVideo method
+- Added task cancellation support to VideoProcessor
+- Replaced density menu with segmented control for better UX
+- Enhanced drag and drop to support folders
+- Added state management for different view modes
+- Improved folder browsing with NavigationSplitView layout
 
 ### Deprecated
 - N/A
@@ -43,3 +95,20 @@
 - Added sandbox entitlements for secure file access
 - Added read-only permissions for movies and user-selected files
 - Implemented proper memory management to prevent leaks 
+
+## [1.1.0] - 2024-01-11
+
+### Changed
+- Major code refactoring for better organization and maintainability
+- Split monolithic MovieViewCore.swift into multiple modules:
+  - Models: MovieFile, ViewState, DensityConfig, VideoThumbnail
+  - ViewModels: FolderProcessor, VideoProcessor
+  - Views: ContentView, FolderView, ThumbnailView, DensityPicker
+  - Utilities: VideoDropDelegate
+- Improved code organization and separation of concerns
+- Enhanced modularity for better testing and maintenance 
+
+### Added
+- Added loading indicators for date range search
+- Fixed thumbnail generation for date-based video searches
+- Added background thumbnail processing for search results 

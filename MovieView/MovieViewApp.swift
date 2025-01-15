@@ -12,7 +12,9 @@ struct MovieViewApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .frame(minWidth: 800, minHeight: 600)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(minWidth: 1000, minHeight: 800)
+                
         }
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)
