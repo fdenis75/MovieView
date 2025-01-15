@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		0F75DA9A2D37D29F00D33238 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 0F75DA992D37D29800D33238 /* .gitignore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		0F797FC42D329F87006E8236 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0F75DA992D37D29800D33238 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		0F797FB02D329F85006E8236 /* MovieView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0F797FC32D329F87006E8236 /* MovieViewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovieViewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0F797FCD2D329F87006E8236 /* MovieViewUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovieViewUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,6 +80,7 @@
 		0F797FA72D329F85006E8236 = {
 			isa = PBXGroup;
 			children = (
+				0F75DA992D37D29800D33238 /* .gitignore */,
 				0F797FB22D329F85006E8236 /* MovieView */,
 				0F797FC62D329F87006E8236 /* MovieViewTests */,
 				0F797FD02D329F87006E8236 /* MovieViewUITests */,
@@ -212,6 +218,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0F75DA9A2D37D29F00D33238 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
