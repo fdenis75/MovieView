@@ -26,6 +26,7 @@ Package.pins
 Package.resolved
 *.xcodeproj
 .swiftpm/
+cursorrules
 
 # macOS
 .DS_Store
