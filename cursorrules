@@ -1,0 +1,231 @@
+Dynamic Mosaic Preview Application: Detailed Specifications
+
+General Description
+
+The application is a macOS-exclusive utility that provides an innovative way to preview movie files. Users drag a movie file onto the application icon in the Dock. A new window opens, displaying a dynamically created mosaic of thumbnails representing the movie content. Users can hover over thumbnails for previews and click them to play the movie in an overlayed sheet.
+
+Functional Requirements
+
+1. Drag-and-Drop Integration
+	•	Feature: Dragging a movie file onto the Dock icon triggers the application.
+	•	Behavior:
+	•	The application opens a new window.
+	•	Starts processing the movie to extract and display thumbnails.
+	•	File Types Supported: Standard video formats (e.g., MP4, MOV, AVI).
+
+2. Mosaic Thumbnail Display
+	•	Feature: Display a mosaic of up to 60 thumbnails extracted from the movie.
+	•	Logic:
+	•	Thumbnail Count: The number of thumbnails is proportional to the movie duration, capped at 60.
+	•	Example: For a 2-hour movie, extract one thumbnail every 2 minutes.
+	•	Aspect Ratio: Thumbnails are arranged to fit within a 16:9 grid.
+	•	Adjust the grid layout dynamically based on the number of thumbnails (e.g., 8x7, 10x6).
+	•	Design:
+	•	Thumbnails have rounded corners.
+	•	Each thumbnail displays a timestamp below it, indicating its position in the movie.
+
+3. Hover Preview
+	•	Feature: Hovering over a thumbnail replaces it with a 2-second video preview (muted).
+	•	Behavior:
+	•	The preview starts at the timestamp represented by the thumbnail.
+	•	The preview loops until the hover ends.
+
+4. Playback on Click
+	•	Feature: Clicking a thumbnail plays the movie starting at the thumbnail’s timestamp.
+	•	Behavior:
+	•	A sheet overlays the mosaic and contains an embedded video player.
+	•	The movie starts at the exact timestamp corresponding to the clicked thumbnail.
+	•	Controls for play, pause, and seek are provided in the sheet.
+
+5. Export Mosaic
+	•	Feature: Allow users to export the mosaic as an image (optional future enhancement).
+	•	Behavior:
+	•	Export includes all thumbnails arranged in the same grid layout.
+	•	The timestamps are included below each thumbnail.
+
+UI/UX Requirements
+
+1. Sleek and Modern UI
+	•	Framework: Use SwiftUI for a clean and responsive design.
+	•	Visual Style:
+	•	Rounded corners for thumbnails.
+	•	Smooth animations for hover and click interactions.
+	•	Minimalistic design for the overlay video player sheet.
+	•	Mac-native aesthetics with translucency effects and dark mode support.
+
+2. Grid Layout
+	•	Behavior:
+	•	Dynamically adjust the grid to maintain a 16:9 aspect ratio.
+	•	Ensure thumbnails are evenly spaced, with no awkward gaps.
+
+3. Responsive and Real-Time Updates
+	•	Behavior:
+	•	Thumbnails appear progressively as they are extracted, rather than waiting for all to be processed.
+	•	Users can interact with already-loaded thumbnails while others are being processed.
+
+4. Hover and Click Interactions
+	•	Hover:
+	•	Replace the thumbnail with a video preview seamlessly.
+	•	Use smooth transitions for switching between thumbnail and preview.
+	•	Click:
+	•	Open a modal sheet with a responsive video player.
+	•	Include a close button in the sheet to return to the mosaic.
+
+Technical Requirements
+
+1. Video Processing
+	•	Framework: Use AVFoundation to:
+	•	Extract frames at intervals for thumbnails.
+	•	Generate video previews for hover interactions.
+	•	Optimization:
+	•	Extract frames asynchronously to ensure the UI remains responsive.
+
+2. Dynamic Grid Layout
+	•	Framework: Use SwiftUI’s LazyVGrid.
+	•	Logic:
+	•	Calculate the grid size dynamically based on the number of thumbnails and maintain a 16:9 aspect ratio.
+	•	Adjust cell size to fit the window while keeping the aspect ratio intact.
+
+3. Video Playback
+	•	Framework: Use AVPlayer embedded in a custom SwiftUI view.
+	•	Behavior:
+	•	Play the movie at the clicked timestamp.
+	•	Allow standard playback controls (play, pause, seek).
+
+4. Hover Previews
+	•	Implementation:
+	•	Extract a short video segment for each thumbnail using AVAssetExportSession.
+	•	Store segments in a temporary cache for quick access during hover interactions.
+
+5. Performance Optimization
+	•	Use background threads for video processing.
+	•	Cache generated thumbnails and previews to avoid redundant processing.
+	•	Lazy-load thumbnails in the grid for large movie files.
+
+Error Handling
+	•	Display a friendly error message if:
+	•	An unsupported file type is dropped.
+	•	The movie file cannot be processed.
+	•	Provide options to retry or close the window.
+
+Non-Functional Requirements
+	•	Platform: macOS-only, compatible with macOS 15.0 or later.
+	•	Performance: Minimal lag during thumbnail generation and hover interactions.
+	•	Accessibility: Ensure VoiceOver support and keyboard navigation.
+
+Unit Testing Requirements for Dynamic Mosaic Preview Application
+
+To ensure the application is robust and meets all functional requirements, each feature will have corresponding unit tests. Below is the detailed breakdown of the unit testing requirements for every feature:
+
+1. Drag-and-Drop Integration
+
+Requirements:
+	•	Test that the application correctly handles supported video file types.
+	•	Test that unsupported file types display an appropriate error message.
+	•	Test that dragging a file triggers the creation of a new window.
+	•	Test that the dropped file is passed to the processing function.
+
+Example Unit Tests:
+	•	Verify that .mp4, .mov, .avi files are accepted.
+	•	Verify that an error alert appears for unsupported formats like .txt or .jpg.
+
+2. Mosaic Thumbnail Display
+
+Requirements:
+	•	Test that the correct number of thumbnails is generated based on movie duration.
+	•	Ensure that the number of thumbnails never exceeds 60.
+	•	Verify that thumbnails are displayed in a grid with a 16:9 aspect ratio.
+	•	Test that each thumbnail has rounded corners and a timestamp below it.
+
+Example Unit Tests:
+	•	For a 2-hour movie, verify that 30 thumbnails are generated (if 1 every 4 minutes).
+	•	Verify grid aspect ratio and thumbnail placement for different numbers of thumbnails.
+
+3. Hover Preview
+
+Requirements:
+	•	Test that hovering over a thumbnail triggers the generation of a 2-second video preview.
+	•	Test that the video preview is muted.
+	•	Verify that the preview starts at the correct timestamp.
+	•	Ensure that stopping the hover reverts to the original thumbnail.
+
+Example Unit Tests:
+	•	Hover over a thumbnail at 10:00; verify that a 2-second clip from 10:00 starts playing.
+	•	Verify that the video preview stops and switches back to the thumbnail after hover ends.
+
+4. Playback on Click
+
+Requirements:
+	•	Test that clicking a thumbnail opens the movie in an overlay sheet.
+	•	Verify that the movie starts playing at the correct timestamp.
+	•	Test that the overlay sheet displays playback controls (play, pause, seek).
+	•	Ensure that closing the sheet returns the user to the mosaic view.
+
+Example Unit Tests:
+	•	Click on a thumbnail at 5:00; verify that the movie starts playing at 5:00.
+	•	Test that the “Close” button dismisses the sheet and retains the mosaic.
+
+5. Sleek UI
+
+Requirements:
+	•	Verify that thumbnails have smooth animations for hover and click interactions.
+	•	Test that the application adapts to different screen sizes and resolutions.
+	•	Test that the UI supports both light and dark modes.
+	•	Ensure proper layout alignment for different grid configurations.
+
+Example Unit Tests:
+	•	Verify smooth transitions when switching from thumbnails to hover previews.
+	•	Test UI responsiveness for resizing the application window.
+
+6. Performance Optimization
+
+Requirements:
+	•	Test that thumbnails are generated asynchronously without blocking the main UI thread.
+	•	Verify that caching mechanisms reduce redundant thumbnail and preview generation.
+	•	Ensure the application remains responsive when processing large files.
+
+Example Unit Tests:
+	•	Test performance for a 2-hour movie file.
+	•	Verify that cached thumbnails are reused when reopening the same file.
+
+7. Error Handling
+
+Requirements:
+	•	Test that an error message is displayed if the movie file cannot be processed.
+	•	Test the retry option for failed processing attempts.
+	•	Verify that unsupported file types are gracefully rejected.
+
+Example Unit Tests:
+	•	Drop an unsupported file type and verify that an error message is displayed.
+	•	Corrupt a movie file and test that the application gracefully fails with an error.
+
+8. Export Mosaic (Future Enhancement)
+
+Requirements:
+	•	Test that the exported image includes all thumbnails and timestamps.
+	•	Verify that the grid layout in the exported image matches the application view.
+	•	Test export performance for large mosaics.
+
+Example Unit Tests:
+	•	Export a mosaic of 30 thumbnails and verify the image content.
+	•	Test that exporting a large file (60 thumbnails) completes within an acceptable time.
+
+Testing Framework
+	•	Use XCTest for all unit testing.
+	•	Mock or stub video processing and playback functionalities where needed.
+	•	Test UI interactions with XCTest UI Testing.
+
+General Test Plan
+	1.	Setup:
+	•	Create mock video files with varying durations.
+	•	Predefine expected outputs for thumbnails, previews, and layouts.
+	2.	Execution:
+	•	Test each feature independently to ensure modularity.
+	•	Use dependency injection for video processing components to mock outputs.
+	3.	Validation:
+	•	Verify that all user interactions work as expected.
+	•	Ensure performance benchmarks are met.
+	4.	Automation:
+	•	Automate testing for different file types, durations, and user interactions.
+	•	Integrate tests into a CI/CD pipeline to catch regressions.
+
