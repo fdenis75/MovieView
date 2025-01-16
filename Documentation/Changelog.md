@@ -3,6 +3,13 @@
 ## [Unreleased]
 
 ### Added
+- New HomeView with improved navigation and organization
+  - Three-panel layout using NavigationSplitView
+  - Sidebar with Library and History sections
+  - Main content area with Statistics, Recent Activity, and Quick Actions
+  - Detail view for selected items
+  - Global search functionality
+  - Placeholder components for future features
 - Comprehensive unit tests for Models and ViewModels
   - Tests for MovieFile initialization and equality
   - Tests for DensityConfig values and behavior
@@ -20,6 +27,26 @@
   - Tests for initial UI elements presence
   - Performance metrics for app launch
   - Screenshot capture of launch state
+- Added optional scene detection for smart thumbnail generation
+  - Accelerate framework integration for fast histogram calculation
+  - Parallel frame processing with TaskGroup
+  - 0.25s sampling rate for accurate detection
+  - vImage and vDSP optimizations for performance
+  - Adaptive thumbnail placement at scene boundaries
+  - Toggle button in toolbar to enable/disable
+  - Adjustable sensitivity slider (0.1-0.5)
+  - Visual indicators for scene change thumbnails
+  - Yellow border and camera icon for scene transitions
+
+### Changed
+- Optimized cache key generation to use file path and modification date instead of file content
+  - Significantly improved performance by avoiding full file reads
+  - Reduced memory usage during cache key generation
+  - Maintained cache invalidation on file modifications
+- Enhanced thumbnail display with scene change information
+  - Added isSceneChange property to VideoThumbnail model
+  - Updated ThumbnailView to show scene change indicators
+  - Improved timestamp formatting to include hours when needed
 
 ## [0.1.0] - 2024-01-11
 

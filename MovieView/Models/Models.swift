@@ -58,30 +58,24 @@ struct DensityConfig: Equatable, Hashable {
 }
 
 // MARK: - Video Thumbnail
-struct VideoThumbnail: Identifiable, Hashable {
+struct VideoThumbnail: Identifiable {
     let id = UUID()
     let image: NSImage
     let timestamp: CMTime
-    let displayTime: String
     let videoURL: URL
     let aspectRatio: CGFloat
+    var isSceneChange: Bool = false
     
-    init(image: NSImage, timestamp: CMTime, videoURL: URL, aspectRatio: CGFloat) {
-        self.image = image
-        self.timestamp = timestamp
-        self.videoURL = videoURL
-        self.aspectRatio = aspectRatio
+    var formattedTime: String {
         let seconds = CMTimeGetSeconds(timestamp)
-        let minutes = Int(seconds) / 60
-        let remainingSeconds = Int(seconds) % 60
-        self.displayTime = String(format: "%02d:%02d", minutes, remainingSeconds)
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-    
-    static func == (lhs: VideoThumbnail, rhs: VideoThumbnail) -> Bool {
-        lhs.id == rhs.id
+        let hours = Int(seconds / 3600)
+        let minutes = Int((seconds.truncatingRemainder(dividingBy: 3600)) / 60)
+        let remainingSeconds = Int(seconds.truncatingRemainder(dividingBy: 60))
+        
+        if hours > 0 {
+            return String(format: "%d:%02d:%02d", hours, minutes, remainingSeconds)
+        } else {
+            return String(format: "%d:%02d", minutes, remainingSeconds)
+        }
     }
 } 

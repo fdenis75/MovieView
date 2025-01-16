@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F153F972D37DC7D00C44803 /* CacheModels in Frameworks */ = {isa = PBXBuildFile; productRef = 0F153F962D37DC7D00C44803 /* CacheModels */; };
 		0F75DA9A2D37D29F00D33238 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 0F75DA992D37D29800D33238 /* .gitignore */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +29,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0F153F942D37DC4400C44803 /* CacheModels */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CacheModels; sourceTree = "<group>"; };
 		0F75DA992D37D29800D33238 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		0F797FB02D329F85006E8236 /* MovieView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0F797FC32D329F87006E8236 /* MovieViewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovieViewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -57,6 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0F153F972D37DC7D00C44803 /* CacheModels in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,13 +80,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0F153F952D37DC7D00C44803 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		0F797FA72D329F85006E8236 = {
 			isa = PBXGroup;
 			children = (
+				0F153F942D37DC4400C44803 /* CacheModels */,
 				0F75DA992D37D29800D33238 /* .gitignore */,
 				0F797FB22D329F85006E8236 /* MovieView */,
 				0F797FC62D329F87006E8236 /* MovieViewTests */,
 				0F797FD02D329F87006E8236 /* MovieViewUITests */,
+				0F153F952D37DC7D00C44803 /* Frameworks */,
 				0F797FB12D329F85006E8236 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -118,6 +130,7 @@
 			);
 			name = MovieView;
 			packageProductDependencies = (
+				0F153F962D37DC7D00C44803 /* CacheModels */,
 			);
 			productName = MovieView;
 			productReference = 0F797FB02D329F85006E8236 /* MovieView.app */;
@@ -604,6 +617,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0F153F962D37DC7D00C44803 /* CacheModels */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CacheModels;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0F797FA82D329F85006E8236 /* Project object */;
 }

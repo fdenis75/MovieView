@@ -39,7 +39,7 @@ struct ThumbnailView: View {
 
     private var overlayContent: some View {
         HStack {
-            Text(thumbnail.displayTime)
+            Text(thumbnail.formattedTime)
                 .font(.caption)
                 .padding(4)
                 .background(.ultraThinMaterial)
@@ -77,6 +77,23 @@ struct ThumbnailView: View {
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .overlay { Color.black.opacity(0.2) }
             .overlay(alignment: .bottom) { overlayContent }
+            .overlay(
+                    Group {
+                        if thumbnail.isSceneChange {
+                            RoundedRectangle(cornerRadius: 4)
+                                .stroke(Color.yellow, lineWidth: 2)
+                                .overlay(
+                                    Image(systemName: "camera.filters")
+                                        .foregroundColor(.yellow)
+                                        .padding(4)
+                                        .background(.black.opacity(0.6))
+                                        .cornerRadius(4)
+                                        .padding(4),
+                                    alignment: .topLeading
+                                )
+                        }
+                    }
+                )
     }
     
     var body: some View {
@@ -150,6 +167,5 @@ struct ThumbnailView: View {
         } message: {
             Text("IINA is not installed. Would you like to install it?")
         }
-        .zIndex(isForcePressed ? 100 : 0)
     }
 } 
