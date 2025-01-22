@@ -3,7 +3,7 @@ import AppKit
 import SwiftUI
 
 // Import models directly
-@preconcurrency import CacheModels
+//@preconcurrency import CacheModels
 
 /// Manages in-memory caching of thumbnails using NSCache
 actor ThumbnailMemoryCache {

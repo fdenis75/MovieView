@@ -2,9 +2,10 @@ import Foundation
 import SwiftUI
 import OSLog
 import AppKit
+import AVFoundation
 
 // Import models directly
-@preconcurrency import CacheModels
+//@preconcurrency import CacheModels
 
 /// Manages the disk-based caching of video thumbnails
 actor ThumbnailCacheManager {
@@ -45,7 +46,7 @@ actor ThumbnailCacheManager {
     }
     
     /// Store a thumbnail in the cache
-    func storeThumbnail(_ image: NSImage, 
+    func storeThumbnail(_ image: CGImage,
                        for videoURL: URL,
                        at timestamp: TimeInterval,
                        quality: ThumbnailQuality,
@@ -72,24 +73,31 @@ actor ThumbnailCacheManager {
     }
     
     /// Save thumbnail image to disk
-    private func saveThumbnail(_ image: NSImage, to url: URL, format: CacheFormat) async throws {
-        let data: Data
-        
-        switch format {
-        case .heic:
-            guard let imageData = image.heicData() else {
-                throw CacheError.thumbnailEncodingFailed
-            }
-            data = imageData
-        case .jpeg:
-            guard let imageData = image.jpegData() else {
-                throw CacheError.thumbnailEncodingFailed
-            }
-            data = imageData
+    private func saveThumbnail(_ image: CGImage, to url: URL, format: CacheFormat) async throws {
+        guard let destination = CGImageDestinationCreateWithURL(
+            url as CFURL,
+            AVFileType.heic.rawValue as CFString,
+            1,
+            nil
+        ) else {
+            throw CacheError.thumbnailEncodingFailed
         }
         
-        try data.write(to: url)
+        let options: [String: Any] = [
+            kCGImageDestinationLossyCompressionQuality as String: 0.4,
+            kCGImageDestinationEmbedThumbnail as String: true,
+            kCGImagePropertyHasAlpha as String: false
+        ]
+        
+        CGImageDestinationAddImage(destination, image, options as CFDictionary?)
+        
+        if !CGImageDestinationFinalize(destination) {
+            throw CacheError.thumbnailEncodingFailed
+        }
+        
+       
     }
+    
     
     /// Update the metadata file for a cached video
     private func updateMetadata(for videoHash: String,

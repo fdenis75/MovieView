@@ -86,7 +86,7 @@ struct ThumbnailCacheMetadata: Codable {
 /// Utility functions for cache management
 extension ThumbnailCacheMetadata {
     /// Generate a cache key for a video file
-    @available(macOS 10.15, *)
+    @available(macOS 10.15, iOS 15.0, *)
     static func generateCacheKey(for videoURL: URL) throws -> String {
         let fileAttributes = try FileManager.default.attributesOfItem(atPath: videoURL.path)
         let modificationDate = fileAttributes[.modificationDate] as? Date ?? Date()

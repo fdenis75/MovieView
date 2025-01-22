@@ -11,6 +11,7 @@ struct ThumbnailView: View {
     @State private var opacity: Double = 0
     @State private var showingIINAError = false
     @State private var isForcePressed = false
+    
     /*
     private func openInIINA() {
         let encodedPath = thumbnail.videoURL.path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? thumbnail.videoURL.path

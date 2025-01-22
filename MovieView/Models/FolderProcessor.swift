@@ -17,7 +17,12 @@ class FolderProcessor: ObservableObject {
         
         processTask = Task {
             for url in urls {
-                guard !Task.isCancelled else { break }
+                guard !Task.isCancelled else { 
+                    await MainActor.run {
+                        isProcessing = false
+                    }
+                    break 
+                }
                 
                 let pathExtension = url.pathExtension.lowercased()
                 let relativePath = url.deletingLastPathComponent().path.replacingOccurrences(of: "/Volumes/", with: "").replacingOccurrences(of: "/", with: "-")
@@ -36,7 +41,9 @@ class FolderProcessor: ObservableObject {
                     }
                 }
             }
-            isProcessing = false
+            await MainActor.run {
+                isProcessing = false
+            }
         }
     }
     
@@ -47,10 +54,11 @@ class FolderProcessor: ObservableObject {
         
         processTask = Task {
             await processDirectory(at: url)
-            isProcessing = false
+            await MainActor.run {
+                isProcessing = false
+            }
         }
     }
-    
     
     private func processDirectory(at url: URL) async {
         guard !Task.isCancelled else { return }
@@ -70,7 +78,12 @@ class FolderProcessor: ObservableObject {
             )
             
             while let fileURL = enumerator?.nextObject() as? URL {
-                guard !Task.isCancelled else { return }
+                guard !Task.isCancelled else { 
+                    await MainActor.run {
+                        isProcessing = false
+                    }
+                    return 
+                }
                 
                 do {
                     let resourceValues = try fileURL.resourceValues(forKeys: Set(resourceKeys))
@@ -139,5 +152,7 @@ class FolderProcessor: ObservableObject {
         processTask?.cancel()
         processTask = nil
         isProcessing = false
+        // Clear partial results when cancelled
+        // movies = []
     }
 } 

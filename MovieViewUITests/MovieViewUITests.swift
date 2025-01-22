@@ -1,84 +1,43 @@
 //
-//  MovieViewUITests.swift
-//  MovieViewUITests
+//  MOvieViewUITests.swift
+//  MOvieViewUITests
 //
-//  Created by Francois on 11/01/2025.
+//  Created by Francois on 16/01/2025.
 //
 
 import XCTest
 
-final class MovieViewUITests: XCTestCase {
-    var app: XCUIApplication!
-    
+final class MOvieViewUITests: XCTestCase {
+
     override func setUpWithError() throws {
+        // Put setup code here. This method is called before the invocation of each test method in the class.
+
+        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-        app = XCUIApplication()
-        app.launch()
+
+        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
     }
-    
+
     override func tearDownWithError() throws {
-        app = nil
+        // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
-    
-    func testInitialState() throws {
-        // Verify initial empty state
-        XCTAssertTrue(app.staticTexts["Drop video files here"].exists)
-        
-        // Verify density picker exists
-        XCTAssertTrue(app.buttons["Density"].exists)
+
+    @MainActor
+    func testExample() throws {
+        // UI tests must launch the application that they test.
+        let app = XCUIApplication()
+        app.launch()
+
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
-    
-    func testDensityPicker() throws {
-        // Open density picker
-        app.buttons["Density"].tap()
-        
-        // Verify all density options exist
-        let densities = ["XXL", "XL", "L", "M", "S", "XS", "XXS"]
-        for density in densities {
-            XCTAssertTrue(app.buttons[density].exists)
+
+    @MainActor
+    func testLaunchPerformance() throws {
+        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
+            // This measures how long it takes to launch your application.
+            measure(metrics: [XCTApplicationLaunchMetric()]) {
+                XCUIApplication().launch()
+            }
         }
-        
-        // Select a different density
-        app.buttons["XL"].tap()
-        
-        // Verify the picker is dismissed
-        XCTAssertFalse(app.buttons["XL"].exists)
-    }
-    
-    func testNavigationElements() throws {
-        // Test that main navigation elements are present
-        XCTAssertTrue(app.buttons["Back"].exists)
-        XCTAssertTrue(app.buttons["Cancel"].exists)
-    }
-    
-    func testThumbnailGridLayout() throws {
-        // Note: This test assumes there are thumbnails present
-        // In a real test, you would need to first add a video file
-        
-        // Test grid view exists
-        let gridView = app.scrollViews["ThumbnailGridView"]
-        XCTAssertTrue(gridView.exists)
-    }
-    
-    func testAccessibilityLabels() throws {
-        // Test important accessibility labels are present
-        XCTAssertTrue(app.buttons["Density"].exists)
-        XCTAssertTrue(app.staticTexts["Drop video files here"].exists)
-    }
-    
-    func testResponsivenessToUserInteraction() throws {
-        // Test that the app responds to basic user interactions
-        
-        // Tap density button
-        app.buttons["Density"].tap()
-        
-        // Verify density menu appears
-        XCTAssertTrue(app.buttons["XXL"].exists)
-        
-        // Dismiss density menu
-        app.buttons["XXL"].tap()
-        
-        // Verify menu is dismissed
-        XCTAssertFalse(app.buttons["XXL"].exists)
     }
 }

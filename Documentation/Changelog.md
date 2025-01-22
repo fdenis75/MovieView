@@ -37,6 +37,13 @@
   - Adjustable sensitivity slider (0.1-0.5)
   - Visual indicators for scene change thumbnails
   - Yellow border and camera icon for scene transitions
+- Enhanced cancellation support for processing operations:
+  - Added escape key support to cancel ongoing operations
+  - Added cancel button in toolbar for both folder scanning and video processing
+  - Improved task cancellation handling with proper cleanup
+  - Clear partial results when cancelling operations
+  - Visual feedback during cancellation
+  - Keyboard shortcut (Escape) for quick cancellation
 
 ### Changed
 - Optimized cache key generation to use file path and modification date instead of file content
@@ -47,6 +54,15 @@
   - Added isSceneChange property to VideoThumbnail model
   - Updated ThumbnailView to show scene change indicators
   - Improved timestamp formatting to include hours when needed
+- Improved folder processing with better cancellation support
+  - Added progress cleanup on cancellation
+  - Clear partial results when cancelled
+  - Better state management during cancellation
+- Enhanced video processing with robust cancellation
+  - Added progress cleanup on cancellation
+  - Clear partial thumbnails when cancelled
+  - Improved state management for cancellation
+  - Better error handling for cancellation
 
 ## [0.1.0] - 2024-01-11
 

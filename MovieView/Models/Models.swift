@@ -58,13 +58,17 @@ struct DensityConfig: Equatable, Hashable {
 }
 
 // MARK: - Video Thumbnail
-struct VideoThumbnail: Identifiable {
+struct VideoThumbnail: Identifiable, Equatable {
     let id = UUID()
     let image: NSImage
     let timestamp: CMTime
     let videoURL: URL
     let aspectRatio: CGFloat
     var isSceneChange: Bool = false
+    
+    static func == (lhs: VideoThumbnail, rhs: VideoThumbnail) -> Bool {
+        lhs.id == rhs.id
+    }
     
     var formattedTime: String {
         let seconds = CMTimeGetSeconds(timestamp)
