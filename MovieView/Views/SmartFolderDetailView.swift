@@ -1,3 +1,11 @@
+//
+//  SmartFolderDetailView.swift
+//  MovieView
+//
+//  Created by Francois on 01/02/2025.
+//
+
+
 import SwiftUI
 
 struct SmartFolderDetailView: View {
@@ -7,7 +15,7 @@ struct SmartFolderDetailView: View {
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-            Color(.systemBackground)
+            Color(NSColor.windowBackgroundColor)
                 .ignoresSafeArea()
             
             VStack(alignment: .leading, spacing: 16) {
@@ -19,6 +27,7 @@ struct SmartFolderDetailView: View {
                 Text("Folder created on: \(formatDate(folder.dateCreated))")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
+                Text("Folder criteria: \(folder.criteria.description)")
                 
                 // Add any extra actions or info as needed.
                 Spacer()

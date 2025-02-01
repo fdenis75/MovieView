@@ -96,6 +96,7 @@ struct HomeView: View {
                             .tag(item)
                     }
                 }
+                .background(.ultraThinMaterial)
                 
                 Section("History") {
                     ForEach([SidebarItem.recentVideos, .cacheStatus], id: \.self) { item in
@@ -103,11 +104,13 @@ struct HomeView: View {
                             .tag(item)
                     }
                 }
+                .background(.ultraThinMaterial)
             }
             .navigationTitle("MovieView")
         } content: {
             // Main Content Area
             ExtractedView
+            .background(.ultraThinMaterial)
         } detail: {
             // Detail View
             if !videoProcessor.thumbnails.isEmpty {
@@ -345,11 +348,11 @@ struct HomeView: View {
                         }
                 case .smartFolders:
                     SmartFoldersView(folderProcessor: folderProcessor, videoProcessor: videoProcessor)
-                        .onChange(of: folderProcessor.movies) { movies in
-                            if !movies.isEmpty {
-                                selectedSidebarItem = nil  // Switch to folder view when movies are loaded
-                            }
-                        }
+                       // .onChange(of: folderProcessor.movies) { movies in
+                        //    if !movies.isEmpty {
+                        //        selectedSidebarItem = nil  // Switch to folder view when movies are loaded
+                        //    }
+                        //}
                 case .recentVideos:
                     if !folderProcessor.movies.isEmpty {
                         FolderView(

@@ -9,13 +9,15 @@ import SwiftUI
 import SwiftData
 
 @main
-struct MOvieViewApp: App {
-
-
+struct MovieViewApp: App {
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            ModernHomeView()
+                .frame(minWidth: 1000, minHeight: 600)
         }
-        
+        .windowStyle(.hiddenTitleBar)
+        .commands {
+            CommandGroup(replacing: .newItem) { }
+        }
     }
 }

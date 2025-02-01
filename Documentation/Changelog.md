@@ -64,8 +64,39 @@
   - Automatic layout optimization for screen size
   - Progress tracking during generation
   - Mosaics saved in `0Tth` subfolder with configuration-based naming
+- Modern three-column layout with enhanced visual hierarchy
+  - Left sidebar for navigation
+  - Center content area for video grid
+  - Right inspector panel for video details
+- New design system with consistent spacing, animations, and materials
+- Improved movie cards with hover effects and selection states
+- Modern toolbar with contextual actions
+- Smooth transitions and animations throughout the app
+- Enhanced empty states and loading indicators
+- System-native materials and blur effects for depth
+- Collapsible inspector panel
+- Improved visual feedback for user interactions
+- Feature parity between classic and modern interfaces
+  - Date-based video search with Today and Date Range options
+  - Comprehensive error handling and alerts
+  - File and folder import functionality
+  - Bookmark management
+  - Smart folder support
+  - Density picker integration
+  - Progress indicators for all operations
+- Enhanced Smart Folder previews
+  - Dynamic 2x2 video preview grid for each folder
+  - Automatic thumbnail generation from folder contents
+  - Smooth loading animations and placeholder states
+  - Hover effects and visual feedback
+  - Matched geometry transitions for smooth navigation
 
 ### Changed
+- Complete UI overhaul with modern macOS design patterns
+- Upgraded to use latest SwiftUI patterns and best practices
+- Enhanced visual hierarchy with proper spacing and typography
+- Improved navigation flow with better state management
+- More consistent use of system materials and blur effects
 - Optimized cache key generation to use file path and modification date instead of file content
   - Significantly improved performance by avoiding full file reads
   - Reduced memory usage during cache key generation

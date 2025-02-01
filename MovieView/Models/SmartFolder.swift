@@ -25,6 +25,23 @@ struct SmartFolderCriteria: Codable {
     var fileSize: FileSizeRange?
     var fileTypes: [String]?
     
+    var description: String {
+        var parts: [String] = []
+        if let name = nameContains, !name.isEmpty { parts.append("Name: \(name)") }
+        if let folder = folderNameContains, !folder.isEmpty { parts.append("Folder: \(folder)") }
+        if let dates = dateRange {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .short
+            if let start = dates.start { parts.append("From: \(formatter.string(from: start))") }
+            if let end = dates.end { parts.append("To: \(formatter.string(from: end))") }
+        }
+        if let size = fileSize {
+            if let min = size.min { parts.append("Min: \(min/1_000_000)MB") }
+            if let max = size.max { parts.append("Max: \(max/1_000_000)MB") }
+        }
+        return parts.isEmpty ? "No criteria set" : parts.joined(separator: ", ")
+    }
+    
     struct DateRange: Codable {
         var start: Date?
         var end: Date?

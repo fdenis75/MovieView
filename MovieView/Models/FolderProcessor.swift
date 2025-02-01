@@ -30,7 +30,7 @@ class FolderProcessor: ObservableObject {
         Logger.folderProcessing.info("Processing \(urls.count) videos")
         isProcessing = true
         movies.removeAll()
-        
+        processTask = Task {
         for url in urls {
             guard !Task.isCancelled else { break }
             
@@ -66,6 +66,7 @@ class FolderProcessor: ObservableObject {
         await MainActor.run {
             isProcessing = false
         }
+    }
     }
     
     func processFolder(at url: URL) async throws {

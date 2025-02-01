@@ -1,6 +1,6 @@
 import SwiftUI
 //@_implementationOnly import MovieView.Utilities.videoFinder
-
+/*
 struct SmartFoldersView: View {
     @StateObject private var smartFolderManager = SmartFolderManager.shared
     @ObservedObject var folderProcessor: FolderProcessor
@@ -114,6 +114,167 @@ struct SmartFoldersView: View {
             }
         }
     }
+    */
+struct SmartFoldersView: View {
+    @StateObject private var smartFolderManager = SmartFolderManager.shared
+    @ObservedObject var folderProcessor: FolderProcessor
+    @ObservedObject var videoProcessor: VideoProcessor
+
+    @State private var isShowingNewFolderSheet = false
+    @State private var selectedFolder: SmartFolder? = nil
+    @State private var isProcessing = false
+    @State private var isMosaicGenerating = false
+    
+    // Mosaic generation states (unchanged)
+    @State private var isShowingMosaicConfig = false
+    @State private var mosaicConfig = MosaicConfig()
+    @State private var selectedVideos = Set<URL>()
+    
+    // Namespace for matched geometry effect
+    @Namespace private var animation
+    
+    // New state for showing the detail view.
+    @State private var isShowingDetail = false
+    
+    var body: some View {
+       
+            ZStack {
+                if !folderProcessor.movies.isEmpty {
+                    VStack {
+                        HStack {
+                            Button {
+                                folderProcessor.movies.removeAll()
+                                folderProcessor.smartFolderName = nil
+                                folderProcessor.cancelProcessing()
+                            } label: {
+                                Label("Back to Smart Folders", systemImage: "chevron.left")
+                            }
+                            .padding()
+                            Spacer()
+                        }
+                        
+                        FolderView(
+                            folderProcessor: folderProcessor,
+                            videoProcessor: videoProcessor,
+                            onMovieSelected: { url in
+                                Task { try await videoProcessor.processVideo(url: url) }
+                            },
+                            smartFolderName: folderProcessor.smartFolderName
+                        )
+                    }
+                } else {
+                    // Smart Folders grid view
+                    ScrollView {
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 200), spacing: 16)], spacing: 16) {
+                            ForEach(smartFolderManager.smartFolders) { folder in
+                                SmartFolderCard(folder: folder, namespace: animation)
+                                    .onHover { hovering in
+                                        // Set the selected folder and show detail with animation.
+                                        withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
+                                            selectedFolder = folder
+                                            isShowingDetail = hovering
+                                        }
+                                    }
+                                    .onTapGesture(count:2) {
+                                       selectedFolder = folder
+                                        openSmartFolder(folder)
+                                    }
+                                    // You can attach context menus here just as before.
+                                    .contextMenu {
+                                        Button {
+                                            selectedFolder = folder
+                                            openSmartFolder(folder)
+                                        } label: {
+                                            Label("Open", systemImage: "folder")
+                                        }
+                                        
+                                        Button {
+                                            selectedFolder = folder
+                                            isShowingMosaicConfig = true
+                                        } label: {
+                                            Label("Generate Mosaics", systemImage: "square.grid.3x3")
+                                        }
+                                        
+                                        Button {
+                                            selectedFolder = folder
+                                            isShowingNewFolderSheet = true
+                                        } label: {
+                                            Label("Edit", systemImage: "pencil")
+                                        }
+                                        
+                                        Button {
+                                            let url = URL(fileURLWithPath: "/Volumes/Ext-6TB-2/Mosaics/\(folder.mosaicDirName)")
+                                            NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: url.path)
+                                        } label: {
+                                            Label("Show in Finder", systemImage: "folder.badge.plus")
+                                        }
+                                        
+                                        Divider()
+                                        
+                                        Button(role: .destructive) {
+                                            smartFolderManager.removeSmartFolder(id: folder.id)
+                                        } label: {
+                                            Label("Delete", systemImage: "trash")
+                                        }
+                                    }
+                            }
+                        }
+                        .padding()
+                    }
+                }
+                
+                if isProcessing {
+                    ProgressView("Scanning videos...")
+                        .padding()
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(8)
+                }
+                if isMosaicGenerating {
+                    VStack {
+                        ProgressView("Generating Mosaic...")
+                            .progressViewStyle(.circular)
+                        Text("\(Int(videoProcessor.mosaicProgress * 100))%")
+                    }
+                    .padding()
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(8)
+                }
+                
+              //  // The detail view, shown over the grid when a folder is selected.
+                //if let folder = selectedFolder, isShowingDetail {
+                //    SmartFolderDetailView(folder: folder, namespace: animation, isPresented: $isShowingDetail)
+                //        .zIndex(1)  // Ensure it appears above the grid.
+                //}
+            }
+            .navigationTitle("Smart Folders")
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        isShowingNewFolderSheet = true
+                    } label: {
+                        Label("New Smart Folder", systemImage: "plus")
+                    }
+                }
+            }
+            .sheet(isPresented: $isShowingNewFolderSheet) {
+                SmartFolderEditor(folder: nil)
+            }
+            .sheet(isPresented: $isShowingMosaicConfig) {
+                MosaicConfigSheet(config: $mosaicConfig) {
+                    guard let folder = selectedFolder else { return }
+                    Task {
+                        await generateMosaicsFromSheet(for: folder)
+                    }
+                }
+            }
+           /* .sheet(isPresented: $isShowingDetail) {
+              //  guard let folder = selectedFolder else { return }
+                if let folder = selectedFolder, isShowingDetail {
+                SmartFolderDetailView(folder: folder, namespace: animation, isPresented: $isShowingDetail)
+                    .zIndex(1)
+                }
+            }*/
+        }
     
     private func openSmartFolder(_ folder: SmartFolder) {
         isProcessing = true
