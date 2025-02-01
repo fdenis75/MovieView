@@ -91,10 +91,40 @@ extension FourCharCode {
 }
 
 // MARK: - Density Configuration
-struct DensityConfig: Equatable, Hashable {
+struct DensityConfig: Equatable, Hashable, Codable {
     let name: String
     let factor: Double
     let extractsMultiplier: Double
+    
+    // MARK: - Codable
+    
+    private enum CodingKeys: String, CodingKey {
+        case factor
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(factor, forKey: .factor)
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let factor = try container.decode(Double.self, forKey: .factor)
+        
+        // Find the matching case based on factor
+        if let config = DensityConfig.allCases.first(where: { $0.factor == factor }) {
+            self = config
+        } else {
+            // Default to .s if no match found
+            self = .s
+        }
+    }
+    
+    init(name: String, factor: Double, extractsMultiplier: Double) {
+        self.name = name
+        self.factor = factor
+        self.extractsMultiplier = extractsMultiplier
+    }
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(name)
@@ -110,6 +140,10 @@ struct DensityConfig: Equatable, Hashable {
     
     static let allCases = [xxl, xl, l, m, s, xs, xxs]
     static let `default` = s
+
+    var rawValue: Double {
+        factor
+    }
 }
 
 // MARK: - Video Thumbnail
@@ -121,12 +155,16 @@ struct VideoThumbnail: Identifiable, Equatable {
     let aspectRatio: CGFloat
     var isSceneChange: Bool = false
     
+    var time: Double {
+        CMTimeGetSeconds(timestamp)
+    }
+    
     static func == (lhs: VideoThumbnail, rhs: VideoThumbnail) -> Bool {
         lhs.id == rhs.id
     }
     
     var formattedTime: String {
-        let seconds = CMTimeGetSeconds(timestamp)
+        let seconds = time
         let hours = Int(seconds / 3600)
         let minutes = Int((seconds.truncatingRemainder(dividingBy: 3600)) / 60)
         let remainingSeconds = Int(seconds.truncatingRemainder(dividingBy: 60))

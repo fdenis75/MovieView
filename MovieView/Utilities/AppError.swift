@@ -11,6 +11,8 @@ enum AppError: LocalizedError {
     case iinaLaunchFailed(String)
     case cacheError(String)
     case unknownError(String)
+    case operationInProgress
+    case mosaicGenerationFailed(URL, String)
     
     var errorDescription: String? {
         switch self {
@@ -32,6 +34,10 @@ enum AppError: LocalizedError {
             return "Cache error: \(reason)"
         case .unknownError(let message):
             return message
+        case .operationInProgress:
+            return "Another operation is already in progress"
+        case .mosaicGenerationFailed(let url, let reason):
+            return "Failed to generate mosaic for \(url.lastPathComponent): \(reason)"
         }
     }
     
@@ -55,6 +61,10 @@ enum AppError: LocalizedError {
             return "Try clearing the app's cache."
         case .unknownError:
             return "Please try again or contact support if the issue persists."
+        case .operationInProgress:
+            return "Please wait for the current operation to complete before starting a new one."
+        case .mosaicGenerationFailed:
+            return "Try processing the file again or check if it's a valid video file."
         }
     }
 }

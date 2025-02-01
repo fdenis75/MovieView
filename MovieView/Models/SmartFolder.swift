@@ -5,12 +5,14 @@ struct SmartFolder: Identifiable, Codable {
     var name: String
     var criteria: SmartFolderCriteria
     let dateCreated: Date
+    var mosaicDirName: String?
     
     init(name: String, criteria: SmartFolderCriteria) {
         self.id = UUID()
         self.name = name
         self.criteria = criteria
         self.dateCreated = Date()
+        self.mosaicDirName = criteria.generateMosaicFolderName()
     }
 }
 
@@ -31,6 +33,56 @@ struct SmartFolderCriteria: Codable {
     struct FileSizeRange: Codable {
         var min: Int64?
         var max: Int64?
+    }
+    
+    /// Returns a short string suitable for use as a mosaic folder name.
+    /// The string is generated based on the criteria settings.
+    /// - Returns: A string that summarizes the criteria, or nil if no criteria are set.
+    func generateMosaicFolderName() -> String? {
+        var components: [String] = []
+        
+        // Add name filter if present
+        if let name = nameContains, !name.isEmpty {
+            components.append("n-\(name)")
+        }
+        
+        // Add folder filter if present 
+        if let folder = folderNameContains, !folder.isEmpty {
+            components.append("f-\(folder)")
+        }
+        
+        // Add date range if present
+        if let dates = dateRange {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyMMdd"
+            if let start = dates.start {
+                components.append("from-\(formatter.string(from: start))")
+            }
+            if let end = dates.end {
+                components.append("to-\(formatter.string(from: end))")
+            }
+        }
+        
+        // Add size range if present
+        if let size = fileSize {
+            if let min = size.min {
+                components.append("min\(min/1_000_000)MB")
+            }
+            if let max = size.max {
+                components.append("max\(max/1_000_000)MB") 
+            }
+        }
+        
+        // Return nil if no criteria are set
+        guard !components.isEmpty else { return nil }
+        
+        // Join with underscores and limit length
+        let joined = components.joined(separator: "_")
+        let maxLength = 50
+        if joined.count <= maxLength {
+            return joined
+        }
+        return String(joined.prefix(maxLength))
     }
 }
 

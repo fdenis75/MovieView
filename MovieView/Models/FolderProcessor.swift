@@ -9,6 +9,7 @@ class FolderProcessor: ObservableObject {
     @Published var isProcessing = false
     @Published private(set) var error: Error?
     @Published private(set) var showAlert = false
+    @Published var smartFolderName: String?
     
     private var processTask: Task<Void, Never>?
     
@@ -21,7 +22,10 @@ class FolderProcessor: ObservableObject {
         error = nil
         showAlert = false
     }
-    
+    func setSmartFolderName(_ name: String) {
+        smartFolderName = name
+    }   
+
     func processVideos(from urls: [URL]) async {
         Logger.folderProcessing.info("Processing \(urls.count) videos")
         isProcessing = true

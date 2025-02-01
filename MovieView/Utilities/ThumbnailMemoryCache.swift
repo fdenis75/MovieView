@@ -64,7 +64,7 @@ actor ThumbnailMemoryCache {
     /// Handle memory warning by clearing part of the cache
     private func handleMemoryWarning() {
         // Clear 75% of items when receiving memory warning
-        cache.countLimit = cache.countLimit / 4
+        cache.countLimit /=  4
     }
     
     /// Store a thumbnail in the memory cache

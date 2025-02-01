@@ -1,0 +1,20 @@
+disabled_rules:
+  - line_length
+  - trailing_whitespace
+  - trailing_comma
+  - trailing_newline
+  - force_try
+  - force_cast
+  - force_unwrapping
+  - empty_enum_arguments
+  - empty_string
+  - empty_collection_literal
+  - empty_string_literal
+  - identifier_name
+  - force_cast
+  - function_parameter_count
+  - function_body_length
+  - function_parameter_count
+  - function_body_length
+  - function_parameter_count
+  - function_body_length

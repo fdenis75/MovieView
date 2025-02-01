@@ -4,43 +4,90 @@ import SwiftUI
 struct SmartFoldersView: View {
     @StateObject private var smartFolderManager = SmartFolderManager.shared
     @ObservedObject var folderProcessor: FolderProcessor
+    @ObservedObject var videoProcessor: VideoProcessor
     @State private var isShowingNewFolderSheet = false
     @State private var selectedFolder: SmartFolder?
     @State private var isProcessing = false
     
+    // Mosaic generation states
+    @State private var isShowingMosaicConfig = false
+    @State private var mosaicConfig = MosaicConfig()
+    @State private var isMosaicGenerating = false
+    
+    @State private var selectedVideos = Set<URL>()
+    
     var body: some View {
-        List {
-            ForEach(smartFolderManager.smartFolders) { folder in
-                HStack {
-                    Label(folder.name, systemImage: "folder.fill.badge.gearshape")
-                    Spacer()
-                    Text(formatDate(folder.dateCreated))
-                        .foregroundStyle(.secondary)
-                }
-                .contextMenu {
-                    Button {
-                        selectedFolder = folder
-                    } label: {
-                        Label("Edit", systemImage: "pencil")
+        VStack {
+            
+                List {
+                    ForEach(smartFolderManager.smartFolders) { folder in
+                        HStack {
+                            Label(folder.name, systemImage: "folder.fill.badge.gearshape")
+                            Spacer()
+                            Text(formatDate(folder.dateCreated))
+                                .foregroundStyle(.secondary)
+                        }
+                        .contextMenu {
+                            Button {
+                                selectedFolder = folder
+                                openSmartFolder(folder)
+                            } label: {
+                                Label("Open", systemImage: "folder")
+                            }
+                            
+                            Button {
+                                selectedFolder = folder
+                                isShowingMosaicConfig = true
+                            } label: {
+                                Label("Generate Mosaics", systemImage: "square.grid.3x3")
+                            }
+                            
+                            Button {
+                                selectedFolder = folder
+                                isShowingNewFolderSheet = true
+                            } label: {
+                                Label("Edit", systemImage: "pencil")
+                            }
+                            
+                            Button {
+                                let url = URL(fileURLWithPath: "/Volumes/Ext-6TB-2/Mosaics/\(folder.mosaicDirName)")
+                                NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: url.path)
+                            } label: {
+                                Label("Show in Finder", systemImage: "folder.badge.plus")
+                            }
+                            
+                            Divider()
+                            
+                            Button(role: .destructive) {
+                                smartFolderManager.removeSmartFolder(id: folder.id)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
+                        .onTapGesture {
+                            
+                            openSmartFolder(folder)
+                        }
                     }
-                    
-                    Button(role: .destructive) {
-                        smartFolderManager.removeSmartFolder(id: folder.id)
-                    } label: {
-                        Label("Delete", systemImage: "trash")
-                    }
-                }
-                .onTapGesture {
-                    openSmartFolder(folder)
                 }
             }
-        }
+        
         .overlay {
             if isProcessing {
                 ProgressView("Scanning videos...")
                     .padding()
                     .background(.ultraThinMaterial)
                     .cornerRadius(8)
+            }
+            if isMosaicGenerating {
+                VStack {
+                    ProgressView("Generating Mosaic...")
+                        .progressViewStyle(.circular)
+                    Text("\(Int(videoProcessor.mosaicProgress * 100))%")
+                }
+                .padding()
+                .background(.ultraThinMaterial)
+                .cornerRadius(8)
             }
         }
         .toolbar {
@@ -57,6 +104,14 @@ struct SmartFoldersView: View {
         }
         .sheet(item: $selectedFolder) { folder in
             SmartFolderEditor(folder: folder)
+        }
+        .sheet(isPresented: $isShowingMosaicConfig) {
+            MosaicConfigSheet(config: $mosaicConfig) {
+                guard let folder = selectedFolder else { return }
+                Task {
+                    await generateMosaicsFromSheet(for: folder)
+                }
+            }
         }
     }
     
@@ -131,7 +186,7 @@ struct SmartFoldersView: View {
                         query.start()
                     }
                 }
-                
+                folderProcessor.setSmartFolderName(folder.mosaicDirName ?? folder.name.replacingOccurrences(of: " ", with: "_"))
                 // Process matching videos
                 await folderProcessor.processVideos(from: videos)
                 
@@ -143,6 +198,55 @@ struct SmartFoldersView: View {
                 await MainActor.run {
                     isProcessing = false
                 }
+            }
+        }
+    }
+    
+    private func generateMosaics(for folder: SmartFolder) {
+        Task {
+            isMosaicGenerating = true
+            defer { isMosaicGenerating = false }
+            
+            let matchingVideos = folderProcessor.movies.filter { movie in
+                smartFolderManager.matchesCriteria(movie: movie, criteria: folder.criteria)
+            }
+            
+            for movie in matchingVideos {
+                do {
+                    let outputURL = try await videoProcessor.generateMosaic(
+                        url: movie.url,
+                        config: mosaicConfig,
+                        smartFolderName: folder.mosaicDirName ?? folder.name.replacingOccurrences(of: " ", with: "_")
+                    )
+                    Logger.videoProcessing.info("Generated mosaic at: \(outputURL.path)")
+                } catch {
+                    Logger.videoProcessing.error("Failed to generate mosaic: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+    
+    private func generateMosaicsFromSheet(for folder: SmartFolder) async {
+        isMosaicGenerating = true
+        defer { isMosaicGenerating = false }
+        
+        // Get matching videos
+        let videos: [MovieFile] = selectedVideos.isEmpty ? 
+            folderProcessor.movies.filter { movie in
+                smartFolderManager.matchesCriteria(movie: movie, criteria: folder.criteria)
+            } : folderProcessor.movies.filter { selectedVideos.contains($0.url) }
+        
+        // Generate mosaics
+        for movie in videos {
+            do {
+                let outputURL = try await videoProcessor.generateMosaic(
+                    url: movie.url,
+                    config: mosaicConfig, 
+                    smartFolderName: folder.mosaicDirName ?? folder.name.replacingOccurrences(of: " ", with: "_")
+                )
+                Logger.videoProcessing.info("Generated mosaic at: \(outputURL.path)")
+            } catch {
+                Logger.videoProcessing.error("Failed to generate mosaic: \(error.localizedDescription)")
             }
         }
     }

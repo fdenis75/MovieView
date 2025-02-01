@@ -11,6 +11,7 @@ struct ThumbnailView: View {
     @State private var opacity: Double = 0
     @State private var showingIINAError = false
     @State private var isForcePressed = false
+    @Environment(\.colorScheme) private var colorScheme
     
     /*
     private func openInIINA() {
@@ -26,25 +27,17 @@ struct ThumbnailView: View {
     }*/
     
     private func openInIINA() {
-        let task = Process()
-        task.executableURL = URL(fileURLWithPath: "/Applications/IINA.app/Contents/MacOS/iina-cli")
-        let encodedPath = thumbnail.videoURL.path
-        task.arguments = ["\(encodedPath)", "--mpv-start=\(Int(CMTimeGetSeconds(thumbnail.timestamp)))"]
-        
-        do {
-            try task.run()
-        } catch {
-            showingIINAError = true
-        }
+        let iinaURL = URL(string: "iina://weblink?url=\(thumbnail.videoURL.absoluteString)")!
+        NSWorkspace.shared.open(iinaURL)
     }
 
     private var overlayContent: some View {
         HStack {
             Text(thumbnail.formattedTime)
                 .font(.caption)
-                .padding(4)
+                .padding(DesignSystem.Spacing.xxsmall)
                 .background(.ultraThinMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 4))
+                .clipShape(RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.small))
             
             Spacer()
             
@@ -54,18 +47,21 @@ struct ThumbnailView: View {
             }
             .buttonStyle(.plain)
             .foregroundStyle(.white)
-            .padding(4)
+            .padding(DesignSystem.Spacing.xxsmall)
             .background(.ultraThinMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 4))
+            .clipShape(RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.small))
         }
-        .padding(8)
+        .padding(DesignSystem.Spacing.small)
     }
     
     private var videoPreview: some View {
         VideoPlayer(player: previewPlayer!)
-            .frame(width: isForcePressed ? size * 1.6 : size, height: isForcePressed ? (size * 1.6/thumbnail.aspectRatio) : size/thumbnail.aspectRatio)
+            .frame(
+                width: isForcePressed ? size * 1.6 : size,
+                height: isForcePressed ? (size * 1.6/thumbnail.aspectRatio) : size/thumbnail.aspectRatio
+            )
             .aspectRatio(contentMode: .fit)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .clipShape(RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.medium))
             .overlay { Color.black.opacity(0.2) }
             .overlay(alignment: .bottom) { overlayContent }
     }
@@ -74,42 +70,57 @@ struct ThumbnailView: View {
         Image(nsImage: thumbnail.image)
             .resizable()
             .aspectRatio(contentMode: .fit)
-            .frame(width: isForcePressed ? size * 1.6 : size, height: isForcePressed ? (size * 1.6/thumbnail.aspectRatio) : size/thumbnail.aspectRatio)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .frame(
+                width: isForcePressed ? size * 1.6 : size,
+                height: isForcePressed ? (size * 1.6/thumbnail.aspectRatio) : size/thumbnail.aspectRatio
+            )
+            .clipShape(RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.medium))
             .overlay { Color.black.opacity(0.2) }
             .overlay(alignment: .bottom) { overlayContent }
             .overlay(
-                    Group {
-                        if thumbnail.isSceneChange {
-                            RoundedRectangle(cornerRadius: 4)
-                                .stroke(Color.yellow, lineWidth: 2)
-                                .overlay(
-                                    Image(systemName: "camera.filters")
-                                        .foregroundColor(.yellow)
-                                        .padding(4)
-                                        .background(.black.opacity(0.6))
-                                        .cornerRadius(4)
-                                        .padding(4),
-                                    alignment: .topLeading
-                                )
-                        }
+                Group {
+                    if thumbnail.isSceneChange {
+                        RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.small)
+                            .stroke(Color.yellow, lineWidth: 2)
+                            .overlay(
+                                Image(systemName: "camera.filters")
+                                    .foregroundColor(.yellow)
+                                    .padding(DesignSystem.Spacing.xxsmall)
+                                    .background(.black.opacity(0.6))
+                                    .clipShape(RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.small))
+                                    .padding(DesignSystem.Spacing.xxsmall),
+                                alignment: .topLeading
+                            )
                     }
-                )
+                }
+            )
     }
     
     var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                if isHovering, let player = previewPlayer {
-                    videoPreview
-                } else {
-                    thumbnailImage
-                }
+        Group {
+            if let player = previewPlayer {
+                videoPreview
+            } else {
+                thumbnailImage
             }
-            .scaleEffect(isForcePressed ? 2.0 : 1.0)
         }
-        .frame(width: isForcePressed ? size * 1.6 : size, height: isForcePressed ? (size * 1.6/thumbnail.aspectRatio) : size/thumbnail.aspectRatio)
-        .opacity(opacity)
+        .onTapGesture {
+            selectedThumbnail = thumbnail
+        }
+        .onLongPressGesture(minimumDuration: 0.5, maximumDistance: 50) {
+            isForcePressed = true
+            let player = AVPlayer(url: thumbnail.videoURL)
+            player.seek(to: CMTime(seconds: thumbnail.time, preferredTimescale: 600))
+            previewPlayer = player
+            player.play()
+        } onPressingChanged: { isPressing in
+            if !isPressing {
+                isForcePressed = false
+                previewPlayer?.pause()
+                previewPlayer = nil
+            }
+        }
+        .animation(.spring(response: DesignSystem.Animation.quick), value: isForcePressed)
         .onAppear {
             withAnimation(.easeIn(duration: 0.5)) {
                 opacity = 1

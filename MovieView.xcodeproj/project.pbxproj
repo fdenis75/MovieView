@@ -29,7 +29,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0F153F942D37DC4400C44803 /* CacheModels */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CacheModels; sourceTree = "<group>"; };
 		0F3A7A432D4814B1009F2054 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		0F75DA992D37D29800D33238 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		0F797FB02D329F85006E8236 /* MovieView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieView.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -92,7 +91,6 @@
 		0F797FA72D329F85006E8236 = {
 			isa = PBXGroup;
 			children = (
-				0F153F942D37DC4400C44803 /* CacheModels */,
 				0F75DA992D37D29800D33238 /* .gitignore */,
 				0F797FB22D329F85006E8236 /* MovieView */,
 				0F797FC62D329F87006E8236 /* MovieViewTests */,
@@ -215,6 +213,8 @@
 			);
 			mainGroup = 0F797FA72D329F85006E8236;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 0F797FB12D329F85006E8236 /* Products */;
 			projectDirPath = "";

@@ -20,6 +20,7 @@ struct MovieCardView: View {
     let size: Double
     @State private var isHovered = false
     @State private var isSelected = false
+    @Binding var selectedMoviesForMosaic: Set<MovieFile>
     
     var body: some View {
         VStack(alignment: .center, spacing: 8) {
@@ -79,7 +80,7 @@ struct MovieCardView: View {
         )
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(isSelected ? Color.blue : Color.gray.opacity(0.3), lineWidth: isSelected ? 2 : 1)
+                .stroke(selectedMoviesForMosaic.contains(movie) ? Color.blue : Color.gray.opacity(0.3), lineWidth: selectedMoviesForMosaic.contains(movie) ? 2 : 1)
         )
         .background {
             RoundedRectangle(cornerRadius: 8)
@@ -87,7 +88,15 @@ struct MovieCardView: View {
                 .shadow(radius: 2)
         }
         .onTapGesture(count: 1) {
-            onSelect(movie.url)
+            if NSEvent.modifierFlags.contains(.command) {
+                if selectedMoviesForMosaic.contains(movie) {
+                    selectedMoviesForMosaic.remove(movie)
+                } else {
+                    selectedMoviesForMosaic.insert(movie)
+                }
+            } else {
+                onSelect(movie.url)
+            }
         }
     }
 }
@@ -95,14 +104,29 @@ struct MovieCardView: View {
 struct FolderView: View {
     
     @ObservedObject var folderProcessor: FolderProcessor
+    @ObservedObject var videoProcessor: VideoProcessor
     let onMovieSelected: (URL) -> Void
+    let smartFolderName: String?
     @State private var sortOption: MovieSortOption = .name
     @State private var sortAscending = true
     @State private var selectedFolder: String?
-    @State private var thumbnailSize: Double = 240  // Default size
+    @State private var thumbnailSize: Double = 160
     @State private var selectedMovie: MovieFile?
     @State private var hoveredMovie: MovieFile?
     @FocusState private var isFocused: Bool
+    
+    // Mosaic generation states
+    @State private var isShowingMosaicConfig = false
+    @State private var mosaicConfig = MosaicConfig()
+    @State private var selectedMoviesForMosaic: Set<MovieFile> = []
+    @State private var isMosaicGenerating = false
+    
+    init(folderProcessor: FolderProcessor, videoProcessor: VideoProcessor, onMovieSelected: @escaping (URL) -> Void, smartFolderName: String? = nil) {
+        self.folderProcessor = folderProcessor
+        self.videoProcessor = videoProcessor
+        self.onMovieSelected = onMovieSelected
+        self.smartFolderName = smartFolderName
+    }
     
     private var columns: [GridItem] {
         [GridItem(.adaptive(minimum: thumbnailSize, maximum: thumbnailSize * 2), spacing: 16)]
@@ -203,7 +227,11 @@ struct FolderView: View {
             .buttonStyle(.borderless)
             
             Spacer()
-            
+           
+                Button(action: playAllInIINA) {
+                    Label("Play All", systemImage: "play.circle.fill")
+                }
+                .buttonStyle(.borderedProminent)
             if folderProcessor.isProcessing {
                 ProgressView()
                     .scaleEffect(0.7)
@@ -216,69 +244,90 @@ struct FolderView: View {
             }
         }
     
-    /*
-    @ViewBuilder
-    private var thumbnailGridView: some View {
-            LazyVGrid(columns: columns, spacing: 16) {
-                ForEach(sortedMovies) { movie in
-                    MovieCardView(movie: movie, onSelect: onMovieSelected, size: thumbnailSize)
-                        .onHover { isHovered in
-                            hoveredMovie = isHovered ? movie : nil
-                        }
-                        // .scaleEffect(hoveredMovie == movie || selectedMovie == movie ? 1.05 : 1.0)
-                        .shadow(
-                            color: .black.opacity(hoveredMovie == movie || selectedMovie == movie ? 0.2 : 0),
-                            radius: 5
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(selectedMovie == movie ? Color.blue : Color.gray.opacity(0.3), lineWidth: selectedMovie == movie ? 2 : 1)
-                        )
-                        .animation(.spring(response: 0.3), value: hoveredMovie)
-                        .animation(.spring(response: 0.3), value: selectedMovie)
-                        .background(selectedMovie == movie ? Color.accentColor.opacity(0.2) : Color.clear)
-                        .cornerRadius(8)
-                        .onTapGesture {
-                            selectedMovie = movie
-                            onMovieSelected(movie.url)
-                        }
-                }
-            }
-            .padding()
+    private func playAllInIINA() {
+        do {
+            let urls = sortedMovies.map(\.url)
+            let tempDir = FileManager.default.temporaryDirectory
+            let playlistURL = try PlaylistGenerator.createM3U8(from: urls, at: tempDir)
+            let iinaURL = URL(string: "iina://open?url=\(playlistURL.absoluteString)")!
+            NSWorkspace.shared.open(iinaURL)
+        } catch {
+            // Handle error appropriately
+            print("Error creating playlist: \(error)")
         }
-    
-    */
+    }
     
     var body: some View {
-      
         VStack(spacing: 0) {
             slideView
                 .padding(.horizontal)
             
             HStack {
                 menuView
+                
+                if folderProcessor.smartFolderName != nil {
+                    Spacer()
+                    Button {
+                        isShowingMosaicConfig = true
+                    } label: {
+                        Label("Generate Mosaics for Smart Folder", systemImage: "square.grid.3x3.fill")
+                    }
+                    .help("Generate mosaics for all videos in this smart folder")
+                }
             }
             .padding()
+            
+            HStack {
+                Spacer()
+                
+                Button {
+                    selectedMoviesForMosaic = Set(sortedMovies)
+                } label: {
+                    Label("Select All", systemImage: "checkmark.circle")
+                }
+                .help("Select all videos for mosaic generation")
+                
+                Button {
+                    isShowingMosaicConfig = true
+                } label: {
+                    Label("Generate Mosaic", systemImage: "square.grid.3x3")
+                }
+                .disabled(selectedMoviesForMosaic.isEmpty)
+                .help("Generate mosaic from selected videos")
+            }
+            .padding()
+            
             ScrollViewReader { proxy in
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 16) {
                         ForEach(sortedMovies) { movie in
-                            MovieCardView(movie: movie, onSelect: onMovieSelected, size: thumbnailSize)
-                                .id(movie)
-                                .onHover { isHovered in
-                                    hoveredMovie = isHovered ? movie : nil
+                            MovieCardView(
+                                movie: movie,
+                                onSelect: onMovieSelected,
+                                size: thumbnailSize,
+                                selectedMoviesForMosaic: $selectedMoviesForMosaic
+                            )
+                            .id(movie)
+                            .onHover { isHovered in
+                                hoveredMovie = isHovered ? movie : nil
+                            }
+                            .background(selectedMovie == movie ? Color.accentColor.opacity(0.2) : Color.clear)
+                            .cornerRadius(8)
+                            .onTapGesture(count: 1) { isSelected in 
+                                selectedMovie = movie
+                                onMovieSelected(movie.url)
+                            }
+                            .contextMenu {
+                                Button(action: { selectedMovie = movie }) {
+                                    Label("Select", systemImage: "checkmark.circle")
                                 }
-                           
-                            
-                               // .animation(.spring(response: 0.3), value: hoveredMovie)
-                                //.animation(.spring(response: 0.3), value: selectedMovie)
-                                .background(selectedMovie == movie ? Color.accentColor.opacity(0.2) : Color.clear)
-                                .cornerRadius(8)
-                                .onTapGesture(count: 1) { isSelected in 
-                                    selectedMovie = movie
-                                    onMovieSelected(movie.url)
+                                Button(action: { NSWorkspace.shared.selectFile(movie.url.path, inFileViewerRootedAtPath: movie.url.deletingLastPathComponent().path) }) {
+                                    Label("Show in Finder", systemImage: "folder")
                                 }
-                                
+                                Button(action: { NSPasteboard.general.clearContents(); NSPasteboard.general.setString(movie.url.path, forType: .string) }) {
+                                    Label("Copy Path", systemImage: "doc.on.doc")
+                                }
+                            }
                         }
                         .onKeyPress(.leftArrow) {
                             if let current = selectedMovie,
@@ -348,10 +397,46 @@ struct FolderView: View {
                
             
         }
+        .sheet(isPresented: $isShowingMosaicConfig) {
+            MosaicConfigSheet(config: $mosaicConfig) {
+                Task {
+                    isMosaicGenerating = true
+                    defer { isMosaicGenerating = false }
+                    
+                    // If this is a smart folder and no specific movies are selected, generate for all
+                    let moviesToProcess = smartFolderName != nil && selectedMoviesForMosaic.isEmpty ? 
+                        Array(sortedMovies) : Array(selectedMoviesForMosaic)
+                    
+                    // Always use smartFolderName if it's provided
+                    for movie in moviesToProcess {
+                        do {
+                            let outputURL = try await videoProcessor.generateMosaic(
+                                url: movie.url,
+                                config: mosaicConfig,
+                                smartFolderName: folderProcessor.smartFolderName // This will ensure mosaics are saved in the smart folder directory
+                            )
+                            Logger.videoProcessing.info("Generated mosaic at: \(outputURL.path)")
+                        } catch {
+                            Logger.videoProcessing.error("Failed to generate mosaic: \(error.localizedDescription)")
+                        }
+                    }
+                }
+            }
+        }
         .overlay {
             if folderProcessor.movies.isEmpty && !folderProcessor.isProcessing {
                 Text("No movies found")
                     .foregroundStyle(.secondary)
+            }
+            if isMosaicGenerating {
+                VStack {
+                    ProgressView("Generating Mosaic...")
+                        .progressViewStyle(.circular)
+                    Text("\(Int(videoProcessor.mosaicProgress * 100))%")
+                }
+                .padding()
+                .background(.ultraThinMaterial)
+                .cornerRadius(8)
             }
         }
     }

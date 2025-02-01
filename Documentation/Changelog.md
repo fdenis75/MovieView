@@ -51,6 +51,19 @@
 - Detailed logging for video and folder processing operations
 - Better error handling for file access and processing issues
 - Error handling for IINA player integration
+- New `DesignSystem` module for consistent styling across the app
+  - Standardized spacing values
+  - Consistent corner radius definitions
+  - Animation duration constants
+  - Shadow styling system
+  - Custom view modifiers for common styling patterns
+- Mosaic generation feature
+  - Generate mosaic thumbnails from videos with customizable settings
+  - Support for single video, multiple videos, and smart folders
+  - Configurable mosaic width, density, and visual effects
+  - Automatic layout optimization for screen size
+  - Progress tracking during generation
+  - Mosaics saved in `0Tth` subfolder with configuration-based naming
 
 ### Changed
 - Optimized cache key generation to use file path and modification date instead of file content
@@ -75,6 +88,21 @@
 - Better feedback during thumbnail generation failures
 - More informative error messages for file access issues
 - Added logging throughout the application for better debugging
+- Enhanced ThumbnailGridView
+  - Improved movie information card with modern styling
+  - Added ultra-thin material background for controls
+  - Enhanced thumbnail grid layout with consistent spacing
+  - Improved hover and selection effects
+  - Better visual hierarchy for empty states
+  - Added text selection support for file paths
+  - Optimized slider control layout
+- Improved ThumbnailView
+  - Modernized thumbnail preview with consistent styling
+  - Enhanced scene change indicator design
+  - Improved video preview interaction
+  - Smoother animations for force press
+  - Better IINA integration with proper error handling
+  - Enhanced overlay controls with modern styling
 
 ## [0.1.0] - 2024-01-11
 
@@ -171,3 +199,24 @@
 - Added loading indicators for date range search
 - Fixed thumbnail generation for date-based video searches
 - Added background thumbnail processing for search results 
+
+### Visual Improvements
+- Consistent corner radius across all UI elements
+- Enhanced shadow effects for depth and hierarchy
+- Improved color scheme support for dark and light modes
+- Better use of system materials for modern look
+- Smoother animations and transitions
+- Enhanced visual feedback for user interactions
+- Better spacing and alignment throughout the app
+
+### Technical Improvements
+- Implemented reusable view modifiers
+- Better state management for hover and selection
+- Improved performance with optimized animations
+- Enhanced accessibility with proper text styles
+- Better error handling for external actions 
+
+## Changes in VideoPreviewGenerator.swift
+
+- **Added**: A new private static function `calculateExtractionParameters` to compute the number of extracts and their duration based on the video duration and preview duration.
+- **Updated**: The `generatePreview` function now uses `calculateExtractionParameters` to determine the number of extracts and their segment duration, improving the accuracy and flexibility of preview generation. 

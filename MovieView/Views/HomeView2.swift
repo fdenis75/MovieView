@@ -116,7 +116,8 @@ struct HomeView: View {
                     selectedThumbnail: $selectedThumbnail,
                     isProcessing: videoProcessor.isProcessing,
                     emptyMessage: "Processing video...",
-                    selectedMovie: currentMovie
+                    selectedMovie: currentMovie,
+                    videoProcessor: videoProcessor
                 )
                 .onKeyPress(.escape) { 
                     videoProcessor.cancelProcessing()
@@ -343,7 +344,7 @@ struct HomeView: View {
                             }
                         }
                 case .smartFolders:
-                    SmartFoldersView(folderProcessor: folderProcessor)
+                    SmartFoldersView(folderProcessor: folderProcessor, videoProcessor: videoProcessor)
                         .onChange(of: folderProcessor.movies) { movies in
                             if !movies.isEmpty {
                                 selectedSidebarItem = nil  // Switch to folder view when movies are loaded
@@ -351,9 +352,13 @@ struct HomeView: View {
                         }
                 case .recentVideos:
                     if !folderProcessor.movies.isEmpty {
-                        FolderView(folderProcessor: folderProcessor, onMovieSelected: { url in
-                            Task { try await videoProcessor.processVideo(url: url) }
-                        })
+                        FolderView(
+                            folderProcessor: folderProcessor, 
+                            videoProcessor: videoProcessor, 
+                            onMovieSelected: { url in
+                                Task { try await videoProcessor.processVideo(url: url) }
+                            }
+                        )
                         .onKeyPress(.escape) { 
                             folderProcessor.cancelProcessing()
                             return .handled
@@ -366,7 +371,7 @@ struct HomeView: View {
                         .foregroundStyle(.secondary)
                 case nil:
                     if !folderProcessor.movies.isEmpty {
-                        FolderView(folderProcessor: folderProcessor, onMovieSelected: { url in
+                        FolderView(folderProcessor: folderProcessor, videoProcessor: videoProcessor, onMovieSelected: { url in
                             Task { try await videoProcessor.processVideo(url: url) }
                         })
                         .onKeyPress(.escape) { 
