@@ -44,6 +44,13 @@
   - Clear partial results when cancelling operations
   - Visual feedback during cancellation
   - Keyboard shortcut (Escape) for quick cancellation
+- Comprehensive error handling system with detailed error messages and recovery suggestions
+- Unified macOS logging system using `OSLog`
+- Improved error feedback in the UI with descriptive alerts
+- Added error recovery suggestions for common issues
+- Detailed logging for video and folder processing operations
+- Better error handling for file access and processing issues
+- Error handling for IINA player integration
 
 ### Changed
 - Optimized cache key generation to use file path and modification date instead of file content
@@ -63,6 +70,11 @@
   - Clear partial thumbnails when cancelled
   - Improved state management for cancellation
   - Better error handling for cancellation
+- Enhanced video processing error handling with specific error types
+- Improved folder processing with better error reporting
+- Better feedback during thumbnail generation failures
+- More informative error messages for file access issues
+- Added logging throughout the application for better debugging
 
 ## [0.1.0] - 2024-01-11
 
@@ -133,6 +145,10 @@
 - Fixed thread safety issues with @MainActor
 - Improved error handling with proper error propagation
 - Fixed memory management with weak self references
+- Better handling of invalid video files
+- Improved error handling for inaccessible files and folders
+- More graceful handling of processing failures
+- Clear error messages when IINA is not installed
 
 ### Security
 - Added sandbox entitlements for secure file access

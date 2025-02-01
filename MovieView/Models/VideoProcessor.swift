@@ -3,17 +3,19 @@ import AVKit
 import AVFoundation
 import UniformTypeIdentifiers
 import AppKit
+import OSLog
 
 @MainActor
 class VideoProcessor: ObservableObject {
     @Published var thumbnails: [VideoThumbnail] = []
     @Published var isProcessing = false
-    @Published var error: String?
+    @Published private(set) var error: Error?
+    @Published private(set) var showAlert = false
     @Published var density: DensityConfig = .default
     @Published var processingProgress: Double = 0
     @Published var expectedThumbnailCount: Int = 0
     
-    private var currentVideoURL: URL?
+    @Published var currentVideoURL: URL?
     private var currentTask: Task<Void, Never>?
     private let maxThumbnails = 200
     
@@ -21,38 +23,43 @@ class VideoProcessor: ObservableObject {
     private let memoryCache = ThumbnailMemoryCache.shared
     
     func processDraggedItems(_ provider: NSItemProvider) {
-        print("Processing dragged item...")
+        Logger.videoProcessing.info("Processing dragged item...")
         guard provider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) else {
-            print("Item is not a movie file")
-            self.error = "The dropped file is not a supported video format"
+            Logger.videoProcessing.error("Item is not a movie file")
+            setError(AppError.invalidVideoFile(URL(fileURLWithPath: "")))
             return
         }
         
         provider.loadItem(forTypeIdentifier: UTType.movie.identifier, options: nil) { [weak self] (videoURL, error) in
-            print("Loading item...")
+            Logger.videoProcessing.info("Loading item...")
             if let error = error {
-                print("Error loading item: \(error.localizedDescription)")
+                Logger.videoProcessing.error("Error loading item: \(error.localizedDescription)")
                 Task { @MainActor in
-                    self?.error = error.localizedDescription
+                    self?.setError(AppError.unknownError(error.localizedDescription))
                 }
                 return
             }
             
             guard let videoURL = videoURL as? URL else {
-                print("Invalid URL received")
+                Logger.videoProcessing.error("Invalid URL received")
                 Task { @MainActor in
-                    self?.error = "Invalid video file URL"
+                    self?.setError(AppError.invalidVideoFile(URL(fileURLWithPath: "")))
                 }
                 return
             }
             
-            print("Processing video at URL: \(videoURL)")
+            Logger.videoProcessing.info("Processing video at URL: \(videoURL.path)")
             Task { @MainActor in
-                try await self?.processVideo(url: videoURL)
+                do {
+                    try await self?.processVideo(url: videoURL)
+                } catch {
+                    Logger.videoProcessing.error("Error processing video: \(error.localizedDescription)")
+                    self?.setError(error)
+                }
             }
         }
     }
-
+    
     func calculateExpectedThumbnails() {
         guard let url = currentVideoURL else {
             expectedThumbnailCount = 0
@@ -66,18 +73,18 @@ class VideoProcessor: ObservableObject {
                 let durationSeconds = CMTimeGetSeconds(duration)
                 expectedThumbnailCount = calculateThumbnailCount(duration: durationSeconds)
             } catch {
+                Logger.videoProcessing.error("Failed to calculate expected thumbnails: \(error.localizedDescription)")
                 expectedThumbnailCount = 0
             }
         }
     }
     
     func cancelProcessing() {
+        Logger.videoProcessing.info("Cancelling video processing")
         currentTask?.cancel()
         currentTask = nil
         isProcessing = false
         processingProgress = 0
-        // Clear partial results when cancelled
-       // thumbnails = []
     }
     
     private func calculateThumbnailCount(duration: Double) -> Int {
@@ -92,173 +99,218 @@ class VideoProcessor: ObservableObject {
     }
     
     func processVideo(url: URL) async throws {
+        Logger.videoProcessing.info("Starting video processing for: \(url.lastPathComponent)")
+        
+        try validateVideoFile(url)
+        
         let startTime = Date()
-        print("🎬 Starting video processing at \(startTime)")
-        
-        // Cancel any existing processing
-        cancelProcessing()
-        
-        isProcessing = true
-        processingProgress = 0
-        currentVideoURL = url
-        thumbnails.removeAll()
+        prepareForProcessing(url)
         
         currentTask = Task {
             do {
                 let asset = AVAsset(url: url)
-                let duration = try await asset.load(.duration)
-                let durationSeconds = CMTimeGetSeconds(duration)
-                let thumbnailCount = calculateThumbnailCount(duration: durationSeconds)
+                try await validateVideoAsset(asset, url: url)
                 
-                print("📊 Video duration: \(durationSeconds)s, generating \(thumbnailCount) thumbnails")
+                let (thumbnailCount, durationSeconds) = try await getThumbnailConfiguration(from: asset)
+                expectedThumbnailCount = thumbnailCount
                 
-                let generator = AVAssetImageGenerator(asset: asset)
-                var aspectRatio: CGFloat = 16.0 / 9.0
+                let (generator, aspectRatio) = try await configureImageGenerator(for: asset)
+                let timePoints = calculateTimePoints(count: thumbnailCount, duration: durationSeconds)
+                let parameters = createThumbnailParameters()
                 
-                // Get video track's natural size
-                let tracks = try await asset.loadTracks(withMediaType: .video)
-                if let videoTrack = tracks.first {
-                    let naturalSize = try await videoTrack.load(.naturalSize)
-                    aspectRatio = naturalSize.width / naturalSize.height
-                    
-                    // Calculate dimensions that maintain aspect ratio within 480px width (maximum slider size)
-                    let width: CGFloat = 480
-                    let height = width / aspectRatio
-                    generator.maximumSize = CGSize(width: width, height: height)
-                } else {
-                    // Fallback to 16:9 if no video track found
-                    aspectRatio = 16.0 / 9.0
-                    generator.maximumSize = CGSize(width: 480 * 2, height: 270 * 2)
-                }
-                
-                generator.appliesPreferredTrackTransform = true
-                generator.requestedTimeToleranceBefore = CMTime(seconds: 2, preferredTimescale: 600)
-                generator.requestedTimeToleranceAfter = CMTime(seconds: 2, preferredTimescale: 600)
-                
-                // Calculate time points for thumbnails
-                let timePoints = (0..<thumbnailCount).map { i -> CMTime in
-                    let fraction = Double(i) / Double(max(1, thumbnailCount - 1))
-                    let seconds = fraction * durationSeconds
-                    return CMTimeMakeWithSeconds(seconds, preferredTimescale: 600)
-                }
-                
-                // Create thumbnail parameters
-                let parameters = ThumbnailParameters(
-                    density: Float(density.factor),
-                    quality: .standard,
-                    size: ThumbnailQuality.standard.resolution,
-                    format: .heic
+                try await processThumbnails(
+                    timePoints: timePoints,
+                    generator: generator,
+                    url: url,
+                    aspectRatio: aspectRatio,
+                    parameters: parameters,
+                    thumbnailCount: thumbnailCount
                 )
                 
-                // Process thumbnails with caching
-                for (index, time) in timePoints.enumerated() {
-                    let iterationStart = Date()
-                    try Task.checkCancellation()
-                    
-                    let timestamp = CMTimeGetSeconds(time)
-                    print("🖼 Processing thumbnail \(index + 1)/\(thumbnailCount) at \(String(format: "%.2f", timestamp))s")
-                    
-                    // Try to get from memory cache first
-                    let videoHash = try? ThumbnailCacheMetadata.generateCacheKey(for: url)
-                    let cacheKey = videoHash.map { hash in
-                        ThumbnailMemoryCache.cacheKey(
-                            videoHash: hash,
-                            timestamp: timestamp,
-                            quality: parameters.quality
-                        )
-                    }
-                    
-                    if let hash = videoHash,
-                       let key = cacheKey,
-                       let (cachedImage, _, _) = await memoryCache.retrieve(forKey: key) {
-                        print("✅ Found in memory cache")
-                        addThumbnail(cachedImage, at: timestamp, aspectRatio: aspectRatio)
-                        processingProgress = Double(index + 1) / Double(thumbnailCount)
-                        continue
-                    }
-                    
-                    // Try to get from disk cache
-                    if let cachedImage = try? await diskCache.retrieveThumbnail(
-                        for: url,
-                        at: timestamp,
-                        quality: parameters.quality
-                    ) {
-                        print("💾 Found in disk cache")
-                        // Store in memory cache
-                        if let videoHash = try? ThumbnailCacheMetadata.generateCacheKey(for: url) {
-                            
-                            await memoryCache.store(
-                                image: cachedImage,
-                                forKey: ThumbnailMemoryCache.cacheKey(
-                                    videoHash: videoHash,
-                                    timestamp: timestamp,
-                                    quality: parameters.quality
-                                ),
-                                timestamp: timestamp,
-                                quality: parameters.quality
-                            )
-                        }
-                        
-                        addThumbnail(cachedImage, at: timestamp, aspectRatio: aspectRatio)
-                        processingProgress = Double(index + 1) / Double(thumbnailCount)
-                        continue
-                    }
-                    
-                    // Generate new thumbnail
-                    do {
-                        print("🔄 Generating new thumbnail")
-                        let cgImage = try await generator.image(at: time).image
-                        print("🔄 Converting thumbnail")
-                        let image = NSImage(cgImage: cgImage, size: NSSizeFromCGSize(generator.maximumSize))
-                        
-                        // Store in both caches
-                        print("🔄 start saving thumb to disk cache for thumbnail")
-                        try await diskCache.storeThumbnail(
-                            cgImage,
-                            for: url,
-                            at: timestamp,
-                            quality: parameters.quality,
-                            parameters: parameters
-                        )
-                        
-                        if let videoHash = try? ThumbnailCacheMetadata.generateCacheKey(for: url) {
-                            print("🔄 start saving thumb to memry cache")
-                            await memoryCache.store(
-                                image: image,
-                                forKey: ThumbnailMemoryCache.cacheKey(
-                                    videoHash: videoHash,
-                                    timestamp: timestamp,
-                                    quality: parameters.quality
-                                ),
-                                timestamp: timestamp,
-                                quality: parameters.quality
-                            )
-                        }
-                        print("🔄 add thumb to memry list")
-                        addThumbnail(image, at: timestamp, aspectRatio: aspectRatio)
-                        processingProgress = Double(index + 1) / Double(thumbnailCount)
-                        
-                        let iterationDuration = Date().timeIntervalSince(iterationStart)
-                        print("⏱ Thumbnail generation took \(String(format: "%.2f", iterationDuration))s")
-                    } catch {
-                        if !error.isCancelled {
-                            throw error
-                        }
-                    }
-                }
+                finishProcessing(startTime: startTime)
                 
-                isProcessing = false
-                processingProgress = 1.0
-                
-                let totalDuration = Date().timeIntervalSince(startTime)
-                print("✨ Finished processing video in \(String(format: "%.2f", totalDuration))s")
+            } catch is CancellationError {
+                handleCancellation()
             } catch {
-                await MainActor.run {
-                    self.error = error.localizedDescription
-                    isProcessing = false
-                }
+                handleError(error)
             }
         }
+    }
+    
+    private func validateVideoFile(_ url: URL) throws {
+        guard FileManager.default.fileExists(atPath: url.path) else {
+            Logger.videoProcessing.error("File not found: \(url.path)")
+            throw AppError.fileNotFound(url)
+        }
+        
+        guard FileManager.default.isReadableFile(atPath: url.path) else {
+            Logger.videoProcessing.error("File not accessible: \(url.path)")
+            throw AppError.fileNotAccessible(url)
+        }
+    }
+    
+    private func prepareForProcessing(_ url: URL) {
+        cancelProcessing()
+        isProcessing = true
+        processingProgress = 0
+        currentVideoURL = url
+        thumbnails.removeAll()
+    }
+    
+    private func validateVideoAsset(_ asset: AVAsset, url: URL) async throws {
+    
+        
+        let tracks = try await asset.loadTracks(withMediaType: .video)
+        guard let videoTrack = tracks.first else {
+            Logger.videoProcessing.debug("No video track found, falling back to audio track.")
+            return
+        }
+        
+        guard videoTrack != nil else {
+            Logger.videoProcessing.error("No video track found in file: \(url.path)")
+            throw AppError.invalidVideoFile(url)
+        }
+        
+        let duration = try await asset.load(.duration)
+        let durationSeconds = CMTimeGetSeconds(duration)
+        
+        guard durationSeconds > 0 else {
+            Logger.videoProcessing.error("Invalid video duration for file: \(url.path)")
+            throw AppError.invalidVideoFile(url)
+        }
+    }
+    
+    private func getThumbnailConfiguration(from asset: AVAsset) async throws -> (count: Int, duration: Double) {
+        let duration = try await asset.load(.duration)
+        let durationSeconds = CMTimeGetSeconds(duration)
+        let thumbnailCount = calculateThumbnailCount(duration: durationSeconds)
+        
+        Logger.videoProcessing.info("Generating \(thumbnailCount) thumbnails for video of duration \(durationSeconds)s")
+        
+        return (thumbnailCount, durationSeconds)
+    }
+    
+    private func configureImageGenerator(for asset: AVAsset) async throws -> (AVAssetImageGenerator, CGFloat) {
+        let generator = AVAssetImageGenerator(asset: asset)
+        var aspectRatio: CGFloat = 16.0 / 9.0
+        
+        if let videoTrack = try await asset.loadTracks(withMediaType: .video).first {
+            let naturalSize = try await videoTrack.load(.naturalSize)
+            aspectRatio = naturalSize.width / naturalSize.height
+            generator.maximumSize = CGSize(width: 480, height: 480 / aspectRatio)
+        }
+        
+        generator.appliesPreferredTrackTransform = true
+        generator.requestedTimeToleranceBefore = CMTime(seconds: 2, preferredTimescale: 600)
+        generator.requestedTimeToleranceAfter = CMTime(seconds: 2, preferredTimescale: 600)
+        
+        return (generator, aspectRatio)
+    }
+    
+    private func calculateTimePoints(count: Int, duration: Double) -> [CMTime] {
+        (0..<count).map { i -> CMTime in
+            let fraction = Double(i) / Double(max(1, count - 1))
+            let seconds = fraction * duration
+            return CMTimeMakeWithSeconds(seconds, preferredTimescale: 600)
+        }
+    }
+    
+    private func createThumbnailParameters() -> ThumbnailParameters {
+        ThumbnailParameters(
+            density: Float(density.factor),
+            quality: .standard,
+            size: ThumbnailQuality.standard.resolution,
+            format: .heic
+        )
+    }
+    
+    private func processThumbnails(
+        timePoints: [CMTime],
+        generator: AVAssetImageGenerator,
+        url: URL,
+        aspectRatio: CGFloat,
+        parameters: ThumbnailParameters,
+        thumbnailCount: Int
+    ) async throws {
+        for (index, time) in timePoints.enumerated() {
+            let iterationStart = Date()
+            try Task.checkCancellation()
+            
+            let timestamp = CMTimeGetSeconds(time)
+            Logger.videoProcessing.debug("Processing thumbnail \(index + 1)/\(thumbnailCount) at \(String(format: "%.2f", timestamp))s")
+            
+            if let thumbnail = try await checkMemoryCache(url: url, timestamp: timestamp, parameters: parameters) {
+                addThumbnail(thumbnail, at: timestamp, aspectRatio: aspectRatio)
+                processingProgress = Double(index + 1) / Double(thumbnailCount)
+                continue
+            }
+            
+            if let thumbnail = try await checkDiskCache(url: url, timestamp: timestamp, parameters: parameters) {
+                addThumbnail(thumbnail, at: timestamp, aspectRatio: aspectRatio)
+                processingProgress = Double(index + 1) / Double(thumbnailCount)
+                continue
+            }
+            
+            try await generateAndStoreThumbnail(
+                generator: generator,
+                time: time,
+                url: url,
+                timestamp: timestamp,
+                parameters: parameters,
+                aspectRatio: aspectRatio,
+                index: index,
+                thumbnailCount: thumbnailCount,
+                iterationStart: iterationStart
+            )
+        }
+    }
+    
+    private func generateAndStoreThumbnail(
+        generator: AVAssetImageGenerator,
+        time: CMTime,
+        url: URL,
+        timestamp: Double,
+        parameters: ThumbnailParameters,
+        aspectRatio: CGFloat,
+        index: Int,
+        thumbnailCount: Int,
+        iterationStart: Date
+    ) async throws {
+        do {
+            let thumbnail = try await generateNewThumbnail(generator: generator, at: time)
+            try await storeThumbnail(thumbnail, for: url, at: timestamp, parameters: parameters)
+            addThumbnail(thumbnail, at: timestamp, aspectRatio: aspectRatio)
+            processingProgress = Double(index + 1) / Double(thumbnailCount)
+            
+            let iterationDuration = Date().timeIntervalSince(iterationStart)
+            Logger.videoProcessing.debug("Thumbnail generation took \(String(format: "%.2f", iterationDuration))s")
+        } catch {
+            Logger.videoProcessing.error("Failed to generate thumbnail at \(CMTimeGetSeconds(time))s: \(error.localizedDescription)")
+            if !error.isCancelled {
+                throw AppError.thumbnailGenerationFailed(url, error.localizedDescription)
+            }
+        }
+    }
+    
+    private func finishProcessing(startTime: Date) {
+        isProcessing = false
+        processingProgress = 1.0
+        
+        let totalDuration = Date().timeIntervalSince(startTime)
+        Logger.videoProcessing.info("Finished processing video in \(String(format: "%.2f", totalDuration))s")
+    }
+    
+    private func handleCancellation() {
+        Logger.videoProcessing.info("Video processing cancelled")
+        isProcessing = false
+        processingProgress = 0
+    }
+    
+    private func handleError(_ error: Error) {
+        Logger.videoProcessing.error("Video processing failed: \(error.localizedDescription)")
+        self.setError(error)
+        isProcessing = false
+        processingProgress = 0
     }
     
     private func addThumbnail(_ image: NSImage, at timestamp: TimeInterval, aspectRatio: CGFloat) {
@@ -272,11 +324,95 @@ class VideoProcessor: ObservableObject {
     }
     
     func reprocessCurrentVideo() {
-        guard let url = currentVideoURL else { return }
+        guard let url = currentVideoURL else {
+            Logger.videoProcessing.warning("No video to reprocess")
+            return
+        }
+        Logger.videoProcessing.info("Reprocessing video with new density: \(self.density.name)")
         currentTask?.cancel()
         calculateExpectedThumbnails()
         Task { @MainActor in
-            try await self.processVideo(url: url)
+            do {
+                try await self.processVideo(url: url)
+            } catch {
+                Logger.videoProcessing.error("Error reprocessing video: \(error.localizedDescription)")
+                self.setError(error)
+            }
+        }
+    }
+    
+     func setError(_ error: Error) {
+        self.error = error
+        self.showAlert = true
+    }
+    
+    func dismissAlert() {
+        error = nil
+        showAlert = false
+    }
+    
+    private func checkMemoryCache(url: URL, timestamp: Double, parameters: ThumbnailParameters) async throws -> NSImage? {
+        guard let videoHash = try? ThumbnailCacheMetadata.generateCacheKey(for: url) else {
+            return nil
+        }
+        
+        let key = ThumbnailMemoryCache.cacheKey(
+            videoHash: videoHash,
+            timestamp: timestamp,
+            quality: parameters.quality
+        )
+        
+        if let (cachedImage, _, _) = await memoryCache.retrieve(forKey: key) {
+            Logger.videoProcessing.debug("Found thumbnail in memory cache")
+            return cachedImage
+        }
+        return nil
+    }
+    
+    private func checkDiskCache(url: URL, timestamp: Double, parameters: ThumbnailParameters) async throws -> NSImage? {
+        if let cachedImage = try? await diskCache.retrieveThumbnail(
+            for: url,
+            at: timestamp,
+            quality: parameters.quality
+        ) {
+            Logger.videoProcessing.debug("Found thumbnail in disk cache")
+            await storeThumbnailInMemory(cachedImage, for: url, at: timestamp, parameters: parameters)
+            return cachedImage
+        }
+        return nil
+    }
+    
+    private func generateNewThumbnail(generator: AVAssetImageGenerator, at time: CMTime) async throws -> NSImage {
+        Logger.videoProcessing.debug("Generating new thumbnail")
+        let cgImage = try await generator.image(at: time).image
+        return NSImage(cgImage: cgImage, size: NSSizeFromCGSize(generator.maximumSize))
+    }
+    
+    private func storeThumbnail(_ image: NSImage, for url: URL, at timestamp: Double, parameters: ThumbnailParameters) async throws {
+        if let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil) {
+            try await diskCache.storeThumbnail(
+                cgImage,
+                for: url,
+                at: timestamp,
+                quality: parameters.quality,
+                parameters: parameters
+            )
+            await storeThumbnailInMemory(image, for: url, at: timestamp, parameters: parameters)
+        }
+    }
+    
+    private func storeThumbnailInMemory(_ image: NSImage, for url: URL, at timestamp: Double, parameters: ThumbnailParameters) async {
+        if let videoHash = try? ThumbnailCacheMetadata.generateCacheKey(for: url) {
+            await memoryCache.store(
+                image: image,
+                forKey: ThumbnailMemoryCache.cacheKey(
+                    videoHash: videoHash,
+                    timestamp: timestamp,
+                    quality: parameters.quality
+                ),
+                timestamp: timestamp,
+                quality: parameters.quality
+            )
         }
     }
 }

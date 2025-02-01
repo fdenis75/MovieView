@@ -1,7 +1,36 @@
 import SwiftUI
 
+struct BookmarkRow: View {
+    let bookmark: FolderBookmark
+    let onTap: () -> Void
+    let onDelete: () -> Void
+    
+    var body: some View {
+        HStack {
+            Label(bookmark.name, systemImage: "folder.fill")
+            Spacer()
+            VStack(alignment: .trailing) {
+                Text(bookmark.url.lastPathComponent)
+                    .foregroundStyle(.secondary)
+                Text("Last accessed: \(bookmark.lastAccessed.formatted(date: .abbreviated, time: .shortened))")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .contextMenu {
+            Button(role: .destructive) {
+                onDelete()
+            } label: {
+                Label("Remove Bookmark", systemImage: "trash")
+            }
+        }
+        .onTapGesture(perform: onTap)
+    }
+}
+
 struct BookmarksView: View {
     @StateObject private var bookmarkManager = BookmarkManager.shared
+    @ObservedObject var folderProcessor: FolderProcessor
     @State private var isShowingFolderPicker = false
     @State private var newBookmarkName = ""
     @State private var selectedURL: URL?
@@ -10,23 +39,26 @@ struct BookmarksView: View {
     var body: some View {
         List {
             ForEach(bookmarkManager.bookmarks) { bookmark in
-                HStack {
-                    Label(bookmark.name, systemImage: "folder.fill")
-                    Spacer()
-                    Text(bookmark.url.lastPathComponent)
-                        .foregroundStyle(.secondary)
-                }
-                .contextMenu {
-                    Button(role: .destructive) {
+                BookmarkRow(
+                    bookmark: bookmark,
+                    onTap: {
+                        bookmarkManager.updateLastAccessed(id: bookmark.id)
+                        Task {
+                            try? await folderProcessor.processFolder(at: bookmark.url)
+                        }
+                    },
+                    onDelete: {
                         bookmarkManager.removeBookmark(id: bookmark.id)
-                    } label: {
-                        Label("Remove Bookmark", systemImage: "trash")
                     }
-                }
-                .onTapGesture {
-                    bookmarkManager.updateLastAccessed(id: bookmark.id)
-                    // Handle opening the folder
-                }
+                )
+            }
+        }
+        .overlay {
+            if folderProcessor.isProcessing {
+                ProgressView("Processing folder...")
+                    .padding()
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(8)
             }
         }
         .toolbar {

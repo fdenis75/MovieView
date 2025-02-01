@@ -21,20 +21,20 @@ struct VideoDropDelegate: DropDelegate {
             provider.loadItem(forTypeIdentifier: UTType.folder.identifier, options: nil) { (folderURL, error) in
                 if let error = error {
                     Task { @MainActor in
-                        folderProcessor.error = error.localizedDescription
+                        folderProcessor.setError(AppError.unknownError(error.localizedDescription))
                     }
                     return
                 }
                 
                 guard let url = folderURL as? URL else {
                     Task { @MainActor in
-                        folderProcessor.error = "Invalid folder URL"
+                        folderProcessor.setError(AppError.invalidVideoFile(URL(fileURLWithPath: "")))
                     }
                     return
                 }
                 
                 Task { @MainActor in
-                    await folderProcessor.processFolder(at: url)
+                    try await folderProcessor.processFolder(at: url)
                     onStateChange(.folder)
                 }
             }

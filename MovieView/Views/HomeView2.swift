@@ -16,6 +16,12 @@ struct HomeView: View {
     @State private var isFindingDateRangeVideos = false
     @State private var startDate = Calendar.current.date(byAdding: .day, value: -7, to: Date()) ?? Date()
     @State private var endDate = Date()
+    @State private var selectedMovie: MovieFile?
+    
+    private var currentMovie: MovieFile? {
+        guard let url = videoProcessor.currentVideoURL else { return nil }
+        return MovieFile(url: url)
+    }
     
     enum SidebarItem: Hashable {
         case bookmarks
@@ -51,7 +57,7 @@ struct HomeView: View {
                 isFindingTodayVideos = false
             } catch {
                 await MainActor.run {
-                    folderProcessor.error = error.localizedDescription
+                    folderProcessor.setError(AppError.unknownError(error.localizedDescription))
                     isFindingTodayVideos = false
                 }
             }
@@ -73,7 +79,7 @@ struct HomeView: View {
                 }
             } catch {
                 await MainActor.run {
-                    folderProcessor.error = error.localizedDescription
+                    folderProcessor.setError(AppError.unknownError(error.localizedDescription))
                     isFindingDateRangeVideos = false
                 }
             }
@@ -110,7 +116,7 @@ struct HomeView: View {
                     selectedThumbnail: $selectedThumbnail,
                     isProcessing: videoProcessor.isProcessing,
                     emptyMessage: "Processing video...",
-                    selectedMovie: nil
+                    selectedMovie: currentMovie
                 )
                 .onKeyPress(.escape) { 
                     videoProcessor.cancelProcessing()
@@ -152,10 +158,30 @@ struct HomeView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 8))
             }
         }
+        .onChange(of: videoProcessor.showAlert) { _ in
+            showingError = videoProcessor.showAlert
+        }
+        .onChange(of: folderProcessor.showAlert) { _ in
+            showingError = folderProcessor.showAlert
+        }
         .alert("Error", isPresented: $showingError) {
-            Button("OK", role: .cancel) {}
+            Button("OK", role: .cancel) {
+                videoProcessor.dismissAlert()
+                folderProcessor.dismissAlert()
+            }
         } message: {
-            Text(videoProcessor.error ?? folderProcessor.error ?? "An unknown error occurred")
+            if let error = videoProcessor.error as? AppError ?? folderProcessor.error as? AppError {
+                VStack(alignment: .leading) {
+                    Text(error.localizedDescription)
+                    if let recovery = error.recoverySuggestion {
+                        Text(recovery)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            } else {
+                Text(videoProcessor.error?.localizedDescription ?? folderProcessor.error?.localizedDescription ?? "An unknown error occurred")
+            }
         }
     }
     
@@ -272,12 +298,12 @@ struct HomeView: View {
                         // Clear any folder view state
                         folderProcessor.movies.removeAll()
                     } catch {
-                        videoProcessor.error = error.localizedDescription
+                        videoProcessor.setError(error)
                     }
                 }
             }
         case .failure(let error):
-            videoProcessor.error = error.localizedDescription
+            videoProcessor.setError(error)
         }
     }
     
@@ -290,13 +316,17 @@ struct HomeView: View {
                         // Clear any video processing state
                         videoProcessor.thumbnails.removeAll()
                         try await folderProcessor.processFolder(at: url)
+                        // Add to bookmarks
+                        await MainActor.run {
+                            BookmarkManager.shared.addBookmark(name: url.lastPathComponent, url: url)
+                        }
                     } catch {
-                        videoProcessor.error = error.localizedDescription
+                        folderProcessor.setError(error)
                     }
                 }
             }
         case .failure(let error):
-            folderProcessor.error = error.localizedDescription
+            folderProcessor.setError(error)
         }
     }
     
@@ -306,7 +336,12 @@ struct HomeView: View {
             VStack(spacing: 20) {
                 switch selectedSidebarItem {
                 case .bookmarks:
-                    BookmarksView()
+                    BookmarksView(folderProcessor: folderProcessor)
+                        .onChange(of: folderProcessor.movies) { movies in
+                            if !movies.isEmpty {
+                                selectedSidebarItem = nil  // Switch to folder view when movies are loaded
+                            }
+                        }
                 case .smartFolders:
                     SmartFoldersView(folderProcessor: folderProcessor)
                         .onChange(of: folderProcessor.movies) { movies in

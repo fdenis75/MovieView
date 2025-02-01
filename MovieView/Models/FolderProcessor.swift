@@ -7,9 +7,20 @@ import OSLog
 class FolderProcessor: ObservableObject {
     @Published var movies: [MovieFile] = []
     @Published var isProcessing = false
-    @Published var error: Error?
+    @Published private(set) var error: Error?
+    @Published private(set) var showAlert = false
     
     private var processTask: Task<Void, Never>?
+    
+     func setError(_ error: Error) {
+        self.error = error
+        self.showAlert = true
+    }
+    
+    func dismissAlert() {
+        error = nil
+        showAlert = false
+    }
     
     func processVideos(from urls: [URL]) async {
         Logger.folderProcessing.info("Processing \(urls.count) videos")
@@ -44,7 +55,7 @@ class FolderProcessor: ObservableObject {
                 }
             } catch {
                 Logger.folderProcessing.error("Error processing video \(url.path): \(error.localizedDescription)")
-                self.error = error
+                setError(error)
             }
         }
         
@@ -135,9 +146,7 @@ class FolderProcessor: ObservableObject {
             }
         } catch {
             Logger.folderProcessing.error("Error processing folder \(url.path): \(error.localizedDescription)")
-            await MainActor.run {
-                self.error = AppError.folderProcessingFailed(url, error.localizedDescription)
-            }
+            setError(AppError.folderProcessingFailed(url, error.localizedDescription))
         }
     }
     

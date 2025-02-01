@@ -28,8 +28,14 @@ class BookmarkManager: ObservableObject {
     }
     
     func addBookmark(name: String, url: URL) {
-        let bookmark = FolderBookmark(name: name, url: url)
-        bookmarks.append(bookmark)
+        if let index = bookmarks.firstIndex(where: { $0.url == url }) {
+            var bookmark = bookmarks[index]
+            bookmark.lastAccessed = Date()
+            bookmarks[index] = bookmark
+        } else {
+            let bookmark = FolderBookmark(name: name, url: url)
+            bookmarks.append(bookmark)
+        }
         saveBookmarks()
     }
     

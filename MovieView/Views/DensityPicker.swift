@@ -17,6 +17,9 @@ struct DensityPicker: View {
                 .pickerStyle(.segmented)
                 .frame(width: 320)
                 .disabled(isDisabled)
+                .onChange(of: density) { newDensity in
+                    videoProcessor.reprocessCurrentVideo()
+                }
             }
             
             if videoProcessor.expectedThumbnailCount > 0 {

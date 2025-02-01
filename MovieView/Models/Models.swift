@@ -10,20 +10,42 @@ enum ViewState {
     case processing
 }
 
+
 // MARK: - Movie File
-struct MovieFile: Identifiable, Hashable {
+@MainActor
+class MovieFile: Identifiable, Hashable {
     let id = UUID()
     let url: URL
     let name: String
     let relativePath: String
     var thumbnail: NSImage?
     var aspectRatio: CGFloat = 1.0
+    var duration: TimeInterval?
+    var resolution: CGSize?
+    var codec: String?
+    var bitrate: Int64?
+    var frameRate: Float64?
     
     init(url: URL, relativePath: String = "", aspectRatio: CGFloat = 1.0) {
         self.url = url
         self.name = url.lastPathComponent
         self.relativePath = relativePath
         self.aspectRatio = aspectRatio
+        
+        // Load metadata asynchronously
+        Task {
+            let asset = AVAsset(url: url)
+            let tracks = try await asset.loadTracks(withMediaType: .video)
+            if let track = try? await tracks.first {
+                self.resolution = try? await track.load(.naturalSize)
+                if let frameRate = try? await track.load(.nominalFrameRate) {
+                    self.frameRate = Float64(frameRate)
+                }
+                self.codec = try? await track.mediaFormat
+                self.bitrate = try? await Int64(track.load(.estimatedDataRate))
+            }
+            self.duration = try? await asset.load(.duration).seconds
+        }
     }
     
     func hash(into hasher: inout Hasher) {
@@ -32,6 +54,39 @@ struct MovieFile: Identifiable, Hashable {
     
     static func == (lhs: MovieFile, rhs: MovieFile) -> Bool {
         lhs.id == rhs.id
+    }
+}
+
+extension AVAssetTrack {
+    var mediaFormat: String {
+        get async throws {
+            var format = ""
+            let descriptions = try await load(.formatDescriptions)
+            for (index, formatDesc) in descriptions.enumerated() {
+                let type = CMFormatDescriptionGetMediaType(formatDesc).toString()
+                let subType = CMFormatDescriptionGetMediaSubType(formatDesc).toString()
+                format += "\(type)/\(subType)"
+                if index < descriptions.count - 1 {
+                    format += ","
+                }
+            }
+            return format
+        }
+    }
+}
+
+extension FourCharCode {
+    func toString() -> String {
+        let bytes: [CChar] = [
+            CChar((self >> 24) & 0xff),
+            CChar((self >> 16) & 0xff),
+            CChar((self >> 8) & 0xff),
+            CChar(self & 0xff),
+            0
+        ]
+        let result = String(cString: bytes)
+        let characterSet = CharacterSet.whitespaces
+        return result.trimmingCharacters(in: characterSet)
     }
 }
 

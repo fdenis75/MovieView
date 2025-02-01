@@ -43,7 +43,7 @@ class SmartFolderManager: ObservableObject {
     
     init() {
         loadSmartFolders()
-        createDefaultSmartFolders()
+        smartFolders = createDefaultSmartFolders() + smartFolders
     }
     
     func addSmartFolder(name: String, criteria: SmartFolderCriteria) {
@@ -53,8 +53,11 @@ class SmartFolderManager: ObservableObject {
     }
     
     func removeSmartFolder(id: UUID) {
-        smartFolders.removeAll { $0.id == id }
-        saveSmartFolders()
+        // Only remove if it's not a default folder
+        if !createDefaultSmartFolders().contains(where: { $0.id == id }) {
+            smartFolders.removeAll { $0.id == id }
+            saveSmartFolders()
+        }
     }
     
     func updateSmartFolder(_ folder: SmartFolder) {
@@ -116,31 +119,35 @@ class SmartFolderManager: ObservableObject {
         return true
     }
     
-    private func createDefaultSmartFolders() {
-        
-        if smartFolders.isEmpty {
-            let today = SmartFolderCriteria(
+    private func createDefaultSmartFolders() -> [SmartFolder] {
+        let today = SmartFolder(
+            name: "Today's videos",
+            criteria: SmartFolderCriteria(
                 dateRange: .init(
-                    start: Date(),
+                    start: Calendar.current.startOfDay(for: Date()),
                     end: Calendar.current.date(byAdding: .day, value: +1, to: Date())
                 )
             )
-            addSmartFolder(name: "Today's videos", criteria: today)
-            // Recent Videos (Last 7 days)
-            let recentCriteria = SmartFolderCriteria(
+        )
+        
+        let recent = SmartFolder(
+            name: "Recent Videos",
+            criteria: SmartFolderCriteria(
                 dateRange: .init(
                     start: Calendar.current.date(byAdding: .day, value: -7, to: Date()),
                     end: Date()
                 )
             )
-            addSmartFolder(name: "Recent Videos", criteria: recentCriteria)
-            
-            // Large Videos (>3GB)
-            let largeCriteria = SmartFolderCriteria(
-                fileSize: .init(min: 4_000_000_000) // 1GB
+        )
+        
+        let large = SmartFolder(
+            name: "Large Videos",
+            criteria: SmartFolderCriteria(
+                fileSize: .init(min: 4_000_000_000)
             )
-            addSmartFolder(name: "Large Videos", criteria: largeCriteria)
-        }
+        )
+        
+        return [today, recent, large]
     }
     
     private func loadSmartFolders() {
