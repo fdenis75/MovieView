@@ -124,14 +124,4 @@ enum VideoPreviewGenerator {
         
         return (extractCount, extractDuration)
     }
-
-    static func generatePreview(for url: URL, at timestamp: Double) async throws -> NSImage? {
-        let asset = AVAsset(url: url)
-        let generator = AVAssetImageGenerator(asset: asset)
-        generator.appliesPreferredTrackTransform = true
-        
-        let time = CMTime(seconds: timestamp, preferredTimescale: 600)
-        let cgImage = try await generator.image(at: time).image
-        return NSImage(cgImage: cgImage, size: .zero)
-    }
 } 

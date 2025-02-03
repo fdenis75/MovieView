@@ -165,61 +165,133 @@ struct SmartFoldersView: View {
                 } else {
                     // Smart Folders grid view
                     ScrollView {
-                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 200), spacing: 16)], spacing: 16) {
-                            ForEach(smartFolderManager.smartFolders) { folder in
-                                SmartFolderCard(folder: folder, namespace: animation)
-                                    .onHover { hovering in
-                                        // Set the selected folder and show detail with animation.
-                                        withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
-                                            selectedFolder = folder
-                                            isShowingDetail = hovering
+                        VStack(alignment: .leading, spacing: 20) {
+                            // Default Smart Folders Section
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Default Smart Folders")
+                                    .font(.title2)
+                                    .fontWeight(.bold)
+                                    .padding(.horizontal)
+                                
+                                LazyVGrid(columns: [GridItem(.adaptive(minimum: 200), spacing: 16)], spacing: 16) {
+                                    ForEach(smartFolderManager.defaultSmartFolders) { folder in
+                                        SmartFolderCard(folder: folder, namespace: animation)
+                                            .onHover { hovering in
+                                                withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
+                                                    selectedFolder = folder
+                                                    isShowingDetail = hovering
+                                                }
+                                            }
+                                            .onTapGesture(count:2) {
+                                                selectedFolder = folder
+                                                openSmartFolder(folder)
+                                            }
+                                            .contextMenu {
+                                                Button {
+                                                    selectedFolder = folder
+                                                    openSmartFolder(folder)
+                                                } label: {
+                                                    Label("Open", systemImage: "folder")
+                                                }
+                                                
+                                                Button {
+                                                    selectedFolder = folder
+                                                    isShowingMosaicConfig = true
+                                                } label: {
+                                                    Label("Generate Mosaics", systemImage: "square.grid.3x3")
+                                                }
+                                                
+                                                Button {
+                                                    let url = URL(fileURLWithPath: "/Volumes/Ext-6TB-2/Mosaics/\(folder.mosaicDirName)")
+                                                    NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: url.path)
+                                                } label: {
+                                                    Label("Show in Finder", systemImage: "folder.badge.plus")
+                                                }
+                                            }
+                                    }
+                                }
+                                .padding(.horizontal)
+                            }
+                            
+                            // User Smart Folders Section
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack {
+                                    Text("User Smart Folders")
+                                        .font(.title2)
+                                        .fontWeight(.bold)
+                                    
+                                    Spacer()
+                                    
+                                    Button {
+                                        isShowingNewFolderSheet = true
+                                    } label: {
+                                        Label("New Smart Folder", systemImage: "plus")
+                                    }
+                                }
+                                .padding(.horizontal)
+                                
+                                if smartFolderManager.userSmartFolders.isEmpty {
+                                    Text("No user smart folders created yet")
+                                        .foregroundStyle(.secondary)
+                                        .padding()
+                                } else {
+                                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 200), spacing: 16)], spacing: 16) {
+                                        ForEach(smartFolderManager.userSmartFolders) { folder in
+                                            SmartFolderCard(folder: folder, namespace: animation)
+                                                .onHover { hovering in
+                                                    withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
+                                                        selectedFolder = folder
+                                                        isShowingDetail = hovering
+                                                    }
+                                                }
+                                                .onTapGesture(count:2) {
+                                                    selectedFolder = folder
+                                                    openSmartFolder(folder)
+                                                }
+                                                .contextMenu {
+                                                    Button {
+                                                        selectedFolder = folder
+                                                        openSmartFolder(folder)
+                                                    } label: {
+                                                        Label("Open", systemImage: "folder")
+                                                    }
+                                                    
+                                                    Button {
+                                                        selectedFolder = folder
+                                                        isShowingMosaicConfig = true
+                                                    } label: {
+                                                        Label("Generate Mosaics", systemImage: "square.grid.3x3")
+                                                    }
+                                                    
+                                                    Button {
+                                                        selectedFolder = folder
+                                                        isShowingNewFolderSheet = true
+                                                    } label: {
+                                                        Label("Edit", systemImage: "pencil")
+                                                    }
+                                                    
+                                                    Button {
+                                                        let url = URL(fileURLWithPath: "/Volumes/Ext-6TB-2/Mosaics/\(folder.mosaicDirName)")
+                                                        NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: url.path)
+                                                    } label: {
+                                                        Label("Show in Finder", systemImage: "folder.badge.plus")
+                                                    }
+                                                    
+                                                    Divider()
+                                                    
+                                                    Button(role: .destructive) {
+                                                        smartFolderManager.removeSmartFolder(id: folder.id)
+                                                    } label: {
+                                                        Label("Delete", systemImage: "trash")
+                                                    }
+                                                }
                                         }
                                     }
-                                    .onTapGesture(count:2) {
-                                       selectedFolder = folder
-                                        openSmartFolder(folder)
-                                    }
-                                    // You can attach context menus here just as before.
-                                    .contextMenu {
-                                        Button {
-                                            selectedFolder = folder
-                                            openSmartFolder(folder)
-                                        } label: {
-                                            Label("Open", systemImage: "folder")
-                                        }
-                                        
-                                        Button {
-                                            selectedFolder = folder
-                                            isShowingMosaicConfig = true
-                                        } label: {
-                                            Label("Generate Mosaics", systemImage: "square.grid.3x3")
-                                        }
-                                        
-                                        Button {
-                                            selectedFolder = folder
-                                            isShowingNewFolderSheet = true
-                                        } label: {
-                                            Label("Edit", systemImage: "pencil")
-                                        }
-                                        
-                                        Button {
-                                            let url = URL(fileURLWithPath: "/Volumes/Ext-6TB-2/Mosaics/\(folder.mosaicDirName)")
-                                            NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: url.path)
-                                        } label: {
-                                            Label("Show in Finder", systemImage: "folder.badge.plus")
-                                        }
-                                        
-                                        Divider()
-                                        
-                                        Button(role: .destructive) {
-                                            smartFolderManager.removeSmartFolder(id: folder.id)
-                                        } label: {
-                                            Label("Delete", systemImage: "trash")
-                                        }
-                                    }
+                                    .padding(.horizontal)
+                                }
                             }
                         }
-                        .padding()
+                        .padding(.vertical)
                     }
                 }
                 

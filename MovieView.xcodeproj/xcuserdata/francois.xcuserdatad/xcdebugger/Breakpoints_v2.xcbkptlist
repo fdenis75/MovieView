@@ -1812,36 +1812,6 @@
             endingLineNumber = "74"
             landmarkName = "generatePreview(from:duration:thumbnailCount:progress:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "ED9567DA-C0F6-4A61-BC9B-321E64D32273 - 3550c821c5c6ee2c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(7) suspend resume partial function for static MovieView.VideoPreviewGenerator.generatePreview(from: Foundation.URL, duration: Swift.Double, thumbnailCount: Swift.Int, progress: (Swift.Double) -&gt; ()) async throws -&gt; Foundation.URL"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Utilities/VideoPreviewGenerator.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "74"
-                  endingLineNumber = "74">
-               </Location>
-               <Location
-                  uuid = "ED9567DA-C0F6-4A61-BC9B-321E64D32273 - 68d8ccdfe9eca2a2"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(9) suspend resume partial function for static MovieView.VideoPreviewGenerator.generatePreview(from: Foundation.URL, duration: Swift.Double, thumbnailCount: Swift.Int, progress: (Swift.Double) -&gt; ()) async throws -&gt; Foundation.URL"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Utilities/VideoPreviewGenerator.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "74"
-                  endingLineNumber = "74">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1874,106 +1844,6 @@
             endingLineNumber = "489"
             landmarkName = "generateMosaic(url:config:smartFolderName:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "4635CD85-ECDD-4875-8B62-89F03E7734A3 - b88e37b4ed35131c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(5) suspend resume partial function for MovieView.VideoProcessor.generateMosaic(url: Foundation.URL, config: MovieView.MosaicConfig, smartFolderName: Swift.Optional&lt;Swift.String&gt;) async throws -&gt; Foundation.URL"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Models/VideoProcessor.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "489"
-                  endingLineNumber = "489">
-               </Location>
-               <Location
-                  uuid = "4635CD85-ECDD-4875-8B62-89F03E7734A3 - ecf07a68901c4f65"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(6) await resume partial function for MovieView.VideoProcessor.generateMosaic(url: Foundation.URL, config: MovieView.MosaicConfig, smartFolderName: Swift.Optional&lt;Swift.String&gt;) async throws -&gt; Foundation.URL"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Models/VideoProcessor.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "478"
-                  endingLineNumber = "478">
-               </Location>
-               <Location
-                  uuid = "4635CD85-ECDD-4875-8B62-89F03E7734A3 - ecf07a68901c4c12"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(6) await resume partial function for MovieView.VideoProcessor.generateMosaic(url: Foundation.URL, config: MovieView.MosaicConfig, smartFolderName: Swift.Optional&lt;Swift.String&gt;) async throws -&gt; Foundation.URL"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Models/VideoProcessor.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "489"
-                  endingLineNumber = "489">
-               </Location>
-               <Location
-                  uuid = "4635CD85-ECDD-4875-8B62-89F03E7734A3 - 9759d37623e7cc6d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(7) suspend resume partial function for MovieView.VideoProcessor.generateMosaic(url: Foundation.URL, config: MovieView.MosaicConfig, smartFolderName: Swift.Optional&lt;Swift.String&gt;) async throws -&gt; Foundation.URL"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Models/VideoProcessor.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "478"
-                  endingLineNumber = "478">
-               </Location>
-               <Location
-                  uuid = "4635CD85-ECDD-4875-8B62-89F03E7734A3 - 9759d37623e7cf1a"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(7) suspend resume partial function for MovieView.VideoProcessor.generateMosaic(url: Foundation.URL, config: MovieView.MosaicConfig, smartFolderName: Swift.Optional&lt;Swift.String&gt;) async throws -&gt; Foundation.URL"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Models/VideoProcessor.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "489"
-                  endingLineNumber = "489">
-               </Location>
-               <Location
-                  uuid = "4635CD85-ECDD-4875-8B62-89F03E7734A3 - 4a6215194976a927"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(14) suspend resume partial function for MovieView.VideoProcessor.generateMosaic(url: Foundation.URL, config: MovieView.MosaicConfig, smartFolderName: Swift.Optional&lt;Swift.String&gt;) async throws -&gt; Foundation.URL"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Models/VideoProcessor.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "478"
-                  endingLineNumber = "478">
-               </Location>
-               <Location
-                  uuid = "4635CD85-ECDD-4875-8B62-89F03E7734A3 - 4a6215194976aa50"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(14) suspend resume partial function for MovieView.VideoProcessor.generateMosaic(url: Foundation.URL, config: MovieView.MosaicConfig, smartFolderName: Swift.Optional&lt;Swift.String&gt;) async throws -&gt; Foundation.URL"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Models/VideoProcessor.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "489"
-                  endingLineNumber = "489">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1990,78 +1860,6 @@
             endingLineNumber = "529"
             landmarkName = "generateMosaic(url:config:smartFolderName:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "9FF0008A-24DC-4284-BFDF-53465793AC3A - b88e37b4ed3519d7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(5) suspend resume partial function for MovieView.VideoProcessor.generateMosaic(url: Foundation.URL, config: MovieView.MosaicConfig, smartFolderName: Swift.Optional&lt;Swift.String&gt;) async throws -&gt; Foundation.URL"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Models/VideoProcessor.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "530"
-                  endingLineNumber = "530">
-               </Location>
-               <Location
-                  uuid = "9FF0008A-24DC-4284-BFDF-53465793AC3A - 9759d37623e7c5d1"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(7) suspend resume partial function for MovieView.VideoProcessor.generateMosaic(url: Foundation.URL, config: MovieView.MosaicConfig, smartFolderName: Swift.Optional&lt;Swift.String&gt;) async throws -&gt; Foundation.URL"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Models/VideoProcessor.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "530"
-                  endingLineNumber = "530">
-               </Location>
-               <Location
-                  uuid = "9FF0008A-24DC-4284-BFDF-53465793AC3A - 8e637830799081d3"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(9) suspend resume partial function for MovieView.VideoProcessor.generateMosaic(url: Foundation.URL, config: MovieView.MosaicConfig, smartFolderName: Swift.Optional&lt;Swift.String&gt;) async throws -&gt; Foundation.URL"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Models/VideoProcessor.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "530"
-                  endingLineNumber = "530">
-               </Location>
-               <Location
-                  uuid = "9FF0008A-24DC-4284-BFDF-53465793AC3A - 85af43e2a549599e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(11) suspend resume partial function for MovieView.VideoProcessor.generateMosaic(url: Foundation.URL, config: MovieView.MosaicConfig, smartFolderName: Swift.Optional&lt;Swift.String&gt;) async throws -&gt; Foundation.URL"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Models/VideoProcessor.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "530"
-                  endingLineNumber = "530">
-               </Location>
-               <Location
-                  uuid = "9FF0008A-24DC-4284-BFDF-53465793AC3A - 6351c7e50af16e95"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(16) suspend resume partial function for MovieView.VideoProcessor.generateMosaic(url: Foundation.URL, config: MovieView.MosaicConfig, smartFolderName: Swift.Optional&lt;Swift.String&gt;) async throws -&gt; Foundation.URL"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Models/VideoProcessor.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "530"
-                  endingLineNumber = "530">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2078,78 +1876,6 @@
             endingLineNumber = "543"
             landmarkName = "generateMosaic(url:config:smartFolderName:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "160BBB71-6D0C-4CF2-B509-7ABC4A10D762 - b88e37b4ed35180a"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(5) suspend resume partial function for MovieView.VideoProcessor.generateMosaic(url: Foundation.URL, config: MovieView.MosaicConfig, smartFolderName: Swift.Optional&lt;Swift.String&gt;) async throws -&gt; Foundation.URL"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Models/VideoProcessor.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "543"
-                  endingLineNumber = "543">
-               </Location>
-               <Location
-                  uuid = "160BBB71-6D0C-4CF2-B509-7ABC4A10D762 - 9759d37623e7c40c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(7) suspend resume partial function for MovieView.VideoProcessor.generateMosaic(url: Foundation.URL, config: MovieView.MosaicConfig, smartFolderName: Swift.Optional&lt;Swift.String&gt;) async throws -&gt; Foundation.URL"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Models/VideoProcessor.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "543"
-                  endingLineNumber = "543">
-               </Location>
-               <Location
-                  uuid = "160BBB71-6D0C-4CF2-B509-7ABC4A10D762 - 8e6378307990800e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(9) suspend resume partial function for MovieView.VideoProcessor.generateMosaic(url: Foundation.URL, config: MovieView.MosaicConfig, smartFolderName: Swift.Optional&lt;Swift.String&gt;) async throws -&gt; Foundation.URL"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Models/VideoProcessor.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "543"
-                  endingLineNumber = "543">
-               </Location>
-               <Location
-                  uuid = "160BBB71-6D0C-4CF2-B509-7ABC4A10D762 - 85af43e2a5495843"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(11) suspend resume partial function for MovieView.VideoProcessor.generateMosaic(url: Foundation.URL, config: MovieView.MosaicConfig, smartFolderName: Swift.Optional&lt;Swift.String&gt;) async throws -&gt; Foundation.URL"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Models/VideoProcessor.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "543"
-                  endingLineNumber = "543">
-               </Location>
-               <Location
-                  uuid = "160BBB71-6D0C-4CF2-B509-7ABC4A10D762 - 6351c7e50af16f48"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(16) suspend resume partial function for MovieView.VideoProcessor.generateMosaic(url: Foundation.URL, config: MovieView.MosaicConfig, smartFolderName: Swift.Optional&lt;Swift.String&gt;) async throws -&gt; Foundation.URL"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Models/VideoProcessor.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "543"
-                  endingLineNumber = "543">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2214,36 +1940,6 @@
             endingLineNumber = "468"
             landmarkName = "generateMosaic(url:config:smartFolderName:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "E3BE4665-0AA6-4F9F-8B8B-DF01C8A970B2 - eadaed09416b99dd"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for MovieView.VideoProcessor.generateMosaic(url: Foundation.URL, config: MovieView.MosaicConfig, smartFolderName: Swift.Optional&lt;Swift.String&gt;) async throws -&gt; Foundation.URL"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Models/VideoProcessor.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "468"
-                  endingLineNumber = "468">
-               </Location>
-               <Location
-                  uuid = "E3BE4665-0AA6-4F9F-8B8B-DF01C8A970B2 - eadaed09416b99dd"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for MovieView.VideoProcessor.generateMosaic(url: Foundation.URL, config: MovieView.MosaicConfig, smartFolderName: Swift.Optional&lt;Swift.String&gt;) async throws -&gt; Foundation.URL"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Models/VideoProcessor.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "468"
-                  endingLineNumber = "468">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2260,64 +1956,6 @@
             endingLineNumber = "350"
             landmarkName = "generateMosaics(for:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "6620FAA5-EE2C-4969-9827-B13940EEF503 - ba4a173c9fdd4c9e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for closure #1 () async -&gt; () in MovieView.SmartFoldersView.generateMosaics(for: MovieView.SmartFolder) -&gt; ()"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/SmartFoldersView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "219"
-                  endingLineNumber = "219">
-               </Location>
-               <Location
-                  uuid = "6620FAA5-EE2C-4969-9827-B13940EEF503 - 9aba668da9e8089c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for closure #1 () async -&gt; () in MovieView.SmartFoldersView.generateMosaics(for: MovieView.SmartFolder) -&gt; ()"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/SmartFoldersView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "219"
-                  endingLineNumber = "219">
-               </Location>
-               <Location
-                  uuid = "6620FAA5-EE2C-4969-9827-B13940EEF503 - 69639ed5d29db69b"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(4) suspend resume partial function for closure #1 () async -&gt; () in MovieView.SmartFoldersView.generateMosaics(for: MovieView.SmartFolder) -&gt; ()"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/SmartFoldersView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "219"
-                  endingLineNumber = "219">
-               </Location>
-               <Location
-                  uuid = "6620FAA5-EE2C-4969-9827-B13940EEF503 - 6e4e28302dd83ebf"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (MovieView.MovieFile) -&gt; Swift.Bool in closure #1 () async -&gt; () in MovieView.SmartFoldersView.generateMosaics(for: MovieView.SmartFolder) -&gt; ()"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/SmartFoldersView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "219"
-                  endingLineNumber = "219">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2334,36 +1972,6 @@
             endingLineNumber = "324"
             landmarkName = "openSmartFolder(_:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "C9838E60-47F0-4D72-A601-7BBC62840958 - ad407db158590bdf"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 @Sendable (Swift.CheckedContinuation&lt;Swift.Array&lt;Foundation.URL&gt;, Swift.Error&gt;) -&gt; () in closure #1 () async -&gt; () in MovieView.SmartFoldersView.openSmartFolder(MovieView.SmartFolder) -&gt; ()"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/SmartFoldersView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "194"
-                  endingLineNumber = "194">
-               </Location>
-               <Location
-                  uuid = "C9838E60-47F0-4D72-A601-7BBC62840958 - 1dfc8b50aacac021"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 @Swift.MainActor @Sendable () -&gt; () in closure #2 @Sendable (Swift.CheckedContinuation&lt;Swift.Array&lt;Foundation.URL&gt;, Swift.Error&gt;) -&gt; () in closure #1 () async -&gt; () in MovieView.SmartFoldersView.openSmartFolder(MovieView.SmartFolder) -&gt; ()"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/SmartFoldersView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "194"
-                  endingLineNumber = "194">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2476,36 +2084,6 @@
             endingLineNumber = "341"
             landmarkName = "ExtractedView"
             landmarkType = "24">
-            <Locations>
-               <Location
-                  uuid = "90BAC473-35A6-40F3-821A-5010521C826A - f61afea96909939"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; SwiftUI._ConditionalContent&lt;SwiftUI._ConditionalContent&lt;SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of SwiftUI.View.onChange&lt;&#x3c4;_0_0 where &#x3c4;_1_0: Swift.Equatable&gt;(of: &#x3c4;_1_0, perform: (&#x3c4;_1_0) -&gt; ()) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.onChange&lt;&#x3c4;_0_0 where &#x3c4;_1_0: Swift.Equatable&gt;(of: &#x3c4;_1_0, perform: (&#x3c4;_1_0) -&gt; ()) -&gt; some&gt;&gt;.0&gt;, SwiftUI._ConditionalContent&lt;SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of SwiftUI.View.onKeyPress(_: SwiftUI.KeyEquivalent, action: () -&gt; SwiftUI.KeyPress.Result) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of MovieView.HomeView.emptyStateView : some&gt;&gt;.0&gt;, SwiftUI.Text&gt;&gt;, SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of SwiftUI.View.onKeyPress(_: SwiftUI.KeyEquivalent, action: () -&gt; SwiftUI.KeyPress.Result) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of MovieView.HomeView.emptyStateView : some&gt;&gt;.0&gt;&gt; in MovieView.HomeView.ExtractedView.getter : some"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/HomeView2.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "341"
-                  endingLineNumber = "341">
-               </Location>
-               <Location
-                  uuid = "90BAC473-35A6-40F3-821A-5010521C826A - ea569f5e9e61c1f9"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Array&lt;MovieView.MovieFile&gt;) -&gt; () in closure #1 () -&gt; SwiftUI._ConditionalContent&lt;SwiftUI._ConditionalContent&lt;SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of SwiftUI.View.onChange&lt;&#x3c4;_0_0 where &#x3c4;_1_0: Swift.Equatable&gt;(of: &#x3c4;_1_0, perform: (&#x3c4;_1_0) -&gt; ()) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.onChange&lt;&#x3c4;_0_0 where &#x3c4;_1_0: Swift.Equatable&gt;(of: &#x3c4;_1_0, perform: (&#x3c4;_1_0) -&gt; ()) -&gt; some&gt;&gt;.0&gt;, SwiftUI._ConditionalContent&lt;SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of SwiftUI.View.onKeyPress(_: SwiftUI.KeyEquivalent, action: () -&gt; SwiftUI.KeyPress.Result) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of MovieView.HomeView.emptyStateView : some&gt;&gt;.0&gt;, SwiftUI.Text&gt;&gt;, SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of SwiftUI.View.onKeyPress(_: SwiftUI.KeyEquivalent, action: () -&gt; SwiftUI.KeyPress.Result) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of MovieView.HomeView.emptyStateView : some&gt;&gt;.0&gt;&gt; in MovieView.HomeView.ExtractedView.getter : some"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/HomeView2.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "341"
-                  endingLineNumber = "341">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2520,38 +2098,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "337"
             endingLineNumber = "337"
-            landmarkName = "ExtractedView"
-            landmarkType = "24">
-            <Locations>
-               <Location
-                  uuid = "95CEB5DD-474D-4E40-B9D5-F94690C12106 - 18a6b04b58e51014"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MovieView.HomeView.ExtractedView.getter : some"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/HomeView2.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "337"
-                  endingLineNumber = "337">
-               </Location>
-               <Location
-                  uuid = "95CEB5DD-474D-4E40-B9D5-F94690C12106 - f61afea96909985"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; SwiftUI._ConditionalContent&lt;SwiftUI._ConditionalContent&lt;SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of SwiftUI.View.onChange&lt;&#x3c4;_0_0 where &#x3c4;_1_0: Swift.Equatable&gt;(of: &#x3c4;_1_0, perform: (&#x3c4;_1_0) -&gt; ()) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.onChange&lt;&#x3c4;_0_0 where &#x3c4;_1_0: Swift.Equatable&gt;(of: &#x3c4;_1_0, perform: (&#x3c4;_1_0) -&gt; ()) -&gt; some&gt;&gt;.0&gt;, SwiftUI._ConditionalContent&lt;SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of SwiftUI.View.onKeyPress(_: SwiftUI.KeyEquivalent, action: () -&gt; SwiftUI.KeyPress.Result) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of MovieView.HomeView.emptyStateView : some&gt;&gt;.0&gt;, SwiftUI.Text&gt;&gt;, SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of SwiftUI.View.onKeyPress(_: SwiftUI.KeyEquivalent, action: () -&gt; SwiftUI.KeyPress.Result) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of MovieView.HomeView.emptyStateView : some&gt;&gt;.0&gt;&gt; in MovieView.HomeView.ExtractedView.getter : some"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/HomeView2.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "337"
-                  endingLineNumber = "337">
-               </Location>
-            </Locations>
+            landmarkName = "HomeView"
+            landmarkType = "14">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2632,50 +2180,6 @@
             endingLineNumber = "330"
             landmarkName = "openSmartFolder(_:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "ACF2EF12-1E86-4A08-B8DC-57E9CD8D9888 - 10b6fb8d8987ece8"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for closure #1 () async -&gt; () in MovieView.SmartFoldersView.openSmartFolder(MovieView.SmartFolder) -&gt; ()"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/SmartFoldersView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "200"
-                  endingLineNumber = "200">
-               </Location>
-               <Location
-                  uuid = "ACF2EF12-1E86-4A08-B8DC-57E9CD8D9888 - b3b4940d6e013ee2"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(4) await resume partial function for closure #1 () async -&gt; () in MovieView.SmartFoldersView.openSmartFolder(MovieView.SmartFolder) -&gt; ()"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/SmartFoldersView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "200"
-                  endingLineNumber = "200">
-               </Location>
-               <Location
-                  uuid = "ACF2EF12-1E86-4A08-B8DC-57E9CD8D9888 - 48bbca43579e88ee"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(5) suspend resume partial function for closure #1 () async -&gt; () in MovieView.SmartFoldersView.openSmartFolder(MovieView.SmartFolder) -&gt; ()"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/SmartFoldersView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "200"
-                  endingLineNumber = "200">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2692,36 +2196,6 @@
             endingLineNumber = "47"
             landmarkName = "unknown"
             landmarkType = "0">
-            <Locations>
-               <Location
-                  uuid = "90D6DD01-4C31-4755-AA20-E871BAEBF397 - a5b5ed08e3616f6"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 () -&gt; SwiftUI.TupleView&lt;(SwiftUI.Button&lt;SwiftUI.Label&lt;SwiftUI.Text, SwiftUI.Image&gt;&gt;, SwiftUI.Button&lt;SwiftUI.Label&lt;SwiftUI.Text, SwiftUI.Image&gt;&gt;, SwiftUI.Button&lt;SwiftUI.Label&lt;SwiftUI.Text, SwiftUI.Image&gt;&gt;, SwiftUI.Button&lt;SwiftUI.Label&lt;SwiftUI.Text, SwiftUI.Image&gt;&gt;, SwiftUI.Divider, SwiftUI.Button&lt;SwiftUI.Label&lt;SwiftUI.Text, SwiftUI.Image&gt;&gt;)&gt; in closure #1 (MovieView.SmartFolder) -&gt; &lt;&lt;opaque return type of SwiftUI.View.onTapGesture(count: Swift.Int, perform: () -&gt; ()) -&gt; some&gt;&gt;.0 in closure #2 () -&gt; SwiftUI.ForEach&lt;Swift.Array&lt;MovieView.SmartFolder&gt;, Foundation.UUID, &lt;&lt;opaque return type of SwiftUI.View.onTapGesture(count: Swift.Int, perform: () -&gt; ()) -&gt; some&gt;&gt;.0&gt; in closure #1 () -&gt; SwiftUI._ConditionalContent&lt;MovieView.FolderView, SwiftUI.List&lt;Swift.Never, SwiftUI.ForEach&lt;Swift.Array&lt;MovieView.SmartFolder&gt;, Foundation.UUID, &lt;&lt;opaque return type of SwiftUI.View.onTapGesture(count: Swift.Int, perform: () -&gt; ()) -&gt; some&gt;&gt;.0&gt;&gt;&gt; in MovieView.SmartFoldersView.body.getter : some"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/SmartFoldersView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "47"
-                  endingLineNumber = "47">
-               </Location>
-               <Location
-                  uuid = "90D6DD01-4C31-4755-AA20-E871BAEBF397 - b0b1d60addcd6443"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #3 @Swift.MainActor () -&gt; () in closure #2 () -&gt; SwiftUI.TupleView&lt;(SwiftUI.Button&lt;SwiftUI.Label&lt;SwiftUI.Text, SwiftUI.Image&gt;&gt;, SwiftUI.Button&lt;SwiftUI.Label&lt;SwiftUI.Text, SwiftUI.Image&gt;&gt;, SwiftUI.Button&lt;SwiftUI.Label&lt;SwiftUI.Text, SwiftUI.Image&gt;&gt;, SwiftUI.Button&lt;SwiftUI.Label&lt;SwiftUI.Text, SwiftUI.Image&gt;&gt;, SwiftUI.Divider, SwiftUI.Button&lt;SwiftUI.Label&lt;SwiftUI.Text, SwiftUI.Image&gt;&gt;)&gt; in closure #1 (MovieView.SmartFolder) -&gt; &lt;&lt;opaque return type of SwiftUI.View.onTapGesture(count: Swift.Int, perform: () -&gt; ()) -&gt; some&gt;&gt;.0 in closure #2 () -&gt; SwiftUI.ForEach&lt;Swift.Array&lt;MovieView.SmartFolder&gt;, Foundation.UUID, &lt;&lt;opaque return type of SwiftUI.View.onTapGesture(count: Swift.Int, perform: () -&gt; ()) -&gt; some&gt;&gt;.0&gt; in closure #1 () -&gt; SwiftUI._ConditionalContent&lt;MovieView.FolderView, SwiftUI.List&lt;Swift.Never, SwiftUI.ForEach&lt;Swift.Array&lt;MovieView.SmartFolder&gt;, Foundation.UUID, &lt;&lt;opaque return type of SwiftUI.View.onTapGesture(count: Swift.Int, perform: () -&gt; ()) -&gt; some&gt;&gt;.0&gt;&gt;&gt; in MovieView.SmartFoldersView.body.getter : some"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/SmartFoldersView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "47"
-                  endingLineNumber = "47">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2738,64 +2212,6 @@
             endingLineNumber = "412"
             landmarkName = "body"
             landmarkType = "24">
-            <Locations>
-               <Location
-                  uuid = "F10FA482-3904-4AC0-9B4F-D1A49927B990 - 73cadecc705ef84e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for closure #1 () async -&gt; () in closure #1 () -&gt; () in closure #2 () -&gt; MovieView.MosaicConfigSheet in MovieView.FolderView.body.getter : some"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/FolderView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "412"
-                  endingLineNumber = "412">
-               </Location>
-               <Location
-                  uuid = "F10FA482-3904-4AC0-9B4F-D1A49927B990 - e96bd14023d87ad8"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(2) await resume partial function for closure #1 () async -&gt; () in closure #1 () -&gt; () in closure #2 () -&gt; MovieView.MosaicConfigSheet in MovieView.FolderView.body.getter : some"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/FolderView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "412"
-                  endingLineNumber = "412">
-               </Location>
-               <Location
-                  uuid = "F10FA482-3904-4AC0-9B4F-D1A49927B990 - 496ea92baa85444c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for closure #1 () async -&gt; () in closure #1 () -&gt; () in closure #2 () -&gt; MovieView.MosaicConfigSheet in MovieView.FolderView.body.getter : some"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/FolderView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "412"
-                  endingLineNumber = "412">
-               </Location>
-               <Location
-                  uuid = "F10FA482-3904-4AC0-9B4F-D1A49927B990 - 423092f60fa8e64d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(4) suspend resume partial function for closure #1 () async -&gt; () in closure #1 () -&gt; () in closure #2 () -&gt; MovieView.MosaicConfigSheet in MovieView.FolderView.body.getter : some"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/FolderView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "412"
-                  endingLineNumber = "412">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2828,50 +2244,6 @@
             endingLineNumber = "413"
             landmarkName = "body"
             landmarkType = "24">
-            <Locations>
-               <Location
-                  uuid = "7A5247B8-2B05-45EF-A21B-ABA5D57D5CE7 - 73cadecc705ef82d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for closure #1 () async -&gt; () in closure #1 () -&gt; () in closure #2 () -&gt; MovieView.MosaicConfigSheet in MovieView.FolderView.body.getter : some"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/FolderView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "413"
-                  endingLineNumber = "413">
-               </Location>
-               <Location
-                  uuid = "7A5247B8-2B05-45EF-A21B-ABA5D57D5CE7 - 496ea92baa85442f"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for closure #1 () async -&gt; () in closure #1 () -&gt; () in closure #2 () -&gt; MovieView.MosaicConfigSheet in MovieView.FolderView.body.getter : some"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/FolderView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "413"
-                  endingLineNumber = "413">
-               </Location>
-               <Location
-                  uuid = "7A5247B8-2B05-45EF-A21B-ABA5D57D5CE7 - 423092f60fa8e62e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(4) suspend resume partial function for closure #1 () async -&gt; () in closure #1 () -&gt; () in closure #2 () -&gt; MovieView.MosaicConfigSheet in MovieView.FolderView.body.getter : some"
-                  moduleName = "MovieView.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/francois/Documents/Dev/MovieView/MovieView/Views/FolderView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "413"
-                  endingLineNumber = "413">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2888,6 +2260,86 @@
             endingLineNumber = "458"
             landmarkName = "generateMosaic(url:config:smartFolderName:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "CE80DD54-15F7-4615-9BFD-AD8D72B7D570"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MovieView/Views/ModernHomeView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "187"
+            endingLineNumber = "187"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C6AB32F2-B5DD-4E3E-ABC3-573E6FE34B51"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MovieView/Views/ModernHomeView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "186"
+            endingLineNumber = "186"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BC92968C-25EC-4931-A2F1-96641CEE7D2B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MovieView/Views/ModernHomeView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "553"
+            endingLineNumber = "553"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0D1B3893-12C1-416A-A35B-C8560FD89D75"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MovieView/Views/ModernHomeView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "556"
+            endingLineNumber = "556"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "13225DA8-CA81-46F2-87A9-FFF7B99C858B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MovieView/Views/ModernHomeView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "557"
+            endingLineNumber = "557"
+            landmarkName = "body"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

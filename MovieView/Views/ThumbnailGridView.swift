@@ -291,11 +291,7 @@ private struct ThumbnailCell: View {
             size: size,
                             selectedThumbnail: $selectedThumbnail
                         )
-                        .onHover { isHovered in
-            withAnimation(.spring(response: 0.2)) {
-                            hoveredThumbnail = isHovered ? thumbnail : nil
-                        }
-        }
+          
         .hoverEffect(scale: 1.05)
         .shadow(
             color: (isHovered || isSelected) ? DesignSystem.Shadow.large : DesignSystem.Shadow.small,

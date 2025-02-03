@@ -106,32 +106,37 @@ struct SmartFolderCriteria: Codable {
 @MainActor
 class SmartFolderManager: ObservableObject {
     static let shared = SmartFolderManager()
-    @Published private(set) var smartFolders: [SmartFolder] = []
+    @Published private(set) var defaultSmartFolders: [SmartFolder] = []
+    @Published private(set) var userSmartFolders: [SmartFolder] = []
+    
+    var smartFolders: [SmartFolder] {
+        defaultSmartFolders + userSmartFolders
+    }
     
     private let smartFoldersKey = "smartFolders"
     
     init() {
         loadSmartFolders()
-        smartFolders = createDefaultSmartFolders() + smartFolders
+        defaultSmartFolders = createDefaultSmartFolders()
     }
     
     func addSmartFolder(name: String, criteria: SmartFolderCriteria) {
         let folder = SmartFolder(name: name, criteria: criteria)
-        smartFolders.append(folder)
+        userSmartFolders.append(folder)
         saveSmartFolders()
     }
     
     func removeSmartFolder(id: UUID) {
         // Only remove if it's not a default folder
-        if !createDefaultSmartFolders().contains(where: { $0.id == id }) {
-            smartFolders.removeAll { $0.id == id }
+        if !defaultSmartFolders.contains(where: { $0.id == id }) {
+            userSmartFolders.removeAll { $0.id == id }
             saveSmartFolders()
         }
     }
     
     func updateSmartFolder(_ folder: SmartFolder) {
-        if let index = smartFolders.firstIndex(where: { $0.id == folder.id }) {
-            smartFolders[index] = folder
+        if let index = userSmartFolders.firstIndex(where: { $0.id == folder.id }) {
+            userSmartFolders[index] = folder
             saveSmartFolders()
         }
     }
@@ -189,26 +194,73 @@ class SmartFolderManager: ObservableObject {
     }
     
     private func createDefaultSmartFolders() -> [SmartFolder] {
+        let calendar = Calendar.current
+        let now = Date()
+        
+        // Today's videos with date in name
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy"
+        let todayString = dateFormatter.string(from: now)
+        
         let today = SmartFolder(
-            name: "Today's videos",
+            name: "Videos \(todayString)",
             criteria: SmartFolderCriteria(
                 dateRange: .init(
-                    start: Calendar.current.startOfDay(for: Date()),
-                    end: Calendar.current.date(byAdding: .day, value: +1, to: Date())
+                    start: calendar.startOfDay(for: now),
+                    end: calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: now))
                 )
             )
         )
         
-        let recent = SmartFolder(
-            name: "Recent Videos",
+        // This week's videos
+        let weekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: now))!
+        let weekEnd = calendar.date(byAdding: .weekOfYear, value: 1, to: weekStart)!
+        let weekStartString = dateFormatter.string(from: weekStart)
+        let weekEndString = dateFormatter.string(from: weekEnd)
+        
+        let thisWeek = SmartFolder(
+            name: "Week \(weekStartString) - \(weekEndString)",
             criteria: SmartFolderCriteria(
                 dateRange: .init(
-                    start: Calendar.current.date(byAdding: .day, value: -7, to: Date()),
-                    end: Date()
+                    start: weekStart,
+                    end: weekEnd
                 )
             )
         )
         
+        // This month's videos
+        let monthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: now))!
+        let monthEnd = calendar.date(byAdding: .month, value: 1, to: monthStart)!
+        dateFormatter.dateFormat = "MMMM yyyy"
+        let monthString = dateFormatter.string(from: now)
+        
+        let thisMonth = SmartFolder(
+            name: "Month \(monthString)",
+            criteria: SmartFolderCriteria(
+                dateRange: .init(
+                    start: monthStart,
+                    end: monthEnd
+                )
+            )
+        )
+        
+        // This year's videos
+        let yearStart = calendar.date(from: calendar.dateComponents([.year], from: now))!
+        let yearEnd = calendar.date(byAdding: .year, value: 1, to: yearStart)!
+        dateFormatter.dateFormat = "yyyy"
+        let yearString = dateFormatter.string(from: now)
+        
+        let thisYear = SmartFolder(
+            name: "Year \(yearString)",
+            criteria: SmartFolderCriteria(
+                dateRange: .init(
+                    start: yearStart,
+                    end: yearEnd
+                )
+            )
+        )
+        
+        // Large videos (keeping this from the original defaults)
         let large = SmartFolder(
             name: "Large Videos",
             criteria: SmartFolderCriteria(
@@ -216,13 +268,13 @@ class SmartFolderManager: ObservableObject {
             )
         )
         
-        return [today, recent, large]
+        return [today, thisWeek, thisMonth, thisYear, large]
     }
     
     private func loadSmartFolders() {
         guard let data = UserDefaults.standard.data(forKey: smartFoldersKey) else { return }
         do {
-            smartFolders = try JSONDecoder().decode([SmartFolder].self, from: data)
+            userSmartFolders = try JSONDecoder().decode([SmartFolder].self, from: data)
         } catch {
             print("Error loading smart folders: \(error)")
         }
@@ -230,7 +282,7 @@ class SmartFolderManager: ObservableObject {
     
     private func saveSmartFolders() {
         do {
-            let data = try JSONEncoder().encode(smartFolders)
+            let data = try JSONEncoder().encode(userSmartFolders)
             UserDefaults.standard.set(data, forKey: smartFoldersKey)
         } catch {
             print("Error saving smart folders: \(error)")
